@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <script>
+  if (localStorage.getItem("logado") !== "true") {
+    window.location.href = "login.html";
+  }
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="./fav.icons/tvnicon.png">
+  <title>DIÁRIO ELETRÔNICO</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <h2>Menu Principal</h2>
+    <a href="listadeusuarios.html"><i class="fas fa-user-graduate"></i> Alunos</a>
+    <a href="disciplinasnotas.html"><i class="fas fa-star"></i> Notas</a>
+    <a href="disciplinasfrequencias.html"><i class="fas fa-clipboard-list"></i> Frequência</a>
+    <a href="configprof.html" id="configLink"><i class="fas fa-cogs"></i> Configurações</a>
+    <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</a>
+  </div>
+
+  <div class="main">
+    <div class="header">
+      <h1>Dashboard</h1>
+      <div class="welcome">
+        <i class="fas fa-user-circle" style="font-size: 2rem; margin-right: 10px;"></i>
+        <span id="welcomeUser">Bem-vindo!</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>
+        <i class="fas fa-graduation-cap" style="margin-right: 15px; color: var(--button-primary);"></i>
+        Bem-vindo ao Sistema de Diário Eletrônico!
+      </h2>
+      <p>Desfrute da melhor experiência de um diário eletrônico! Não se esqueça de alimentar todas as informações de maneira correta para manter o controle acadêmico sempre atualizado.</p>
+
+      <div class="stats-container">
+        <div class="stat-card" onclick="window.location.href='listadeusuarios.html'">
+          <h3><i class="fas fa-users"></i> Gerenciar Alunos</h3>
+          <p class="stat-value" style="color: var(--button-primary);">👥</p>
+          <p class="stat-description">Visualizar e gerenciar informações dos alunos</p>
+        </div>
+        
+        <div class="stat-card" onclick="window.location.href='disciplinasfrequencias.html'">
+          <h3><i class="fas fa-clipboard-list"></i> Controle de Frequência</h3>
+          <p class="stat-value" style="color: var(--button-success);">📋</p>
+          <p class="stat-description">Registrar presença e faltas dos alunos</p>
+        </div>
+        
+        <div class="stat-card" onclick="window.location.href='disciplinasnotas.html'">
+          <h3><i class="fas fa-star"></i> Lançamento de Notas</h3>
+          <p class="stat-value" style="color: var(--button-warning);">⭐</p>
+          <p class="stat-description">Inserir e gerenciar notas por disciplina</p>
+        </div>
+        
+        <div class="stat-card" onclick="window.location.href='#'">
+          <h3><i class="fas fa-chart-line"></i> Relatórios</h3>
+          <p class="stat-value" style="color: var(--button-danger);">📊</p>
+          <p class="stat-description">Visualizar estatísticas e relatórios</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span>© 2025 - Todos os direitos reservados</span>
+    <span>XBIUDERS MDD DO DEV</span>
+  </footer>
+
+  <script src="js/auth-manager.js"></script>
+  <script>
+    // Atualiza mensagem de boas-vindas
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentUser = authManager.getCurrentUser();
+      if (currentUser) {
+        document.getElementById('welcomeUser').textContent = `Bem-vindo, ${currentUser.name}!`;
+      }
+
+      // Controla visibilidade do link de configurações
+      if (!authManager.isAdmin()) {
+        const configLink = document.getElementById('configLink');
+        if (configLink) {
+          configLink.style.display = 'none';
+        }
+      }
+    });
+
+    function logout() {
+      authManager.logout();
+      window.location.href = "login.html";
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.querySelector('.sidebar-overlay');
+      
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+  </script>
+
+</body>
+</html>
+

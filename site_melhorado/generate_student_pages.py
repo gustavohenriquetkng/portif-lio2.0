@@ -1,0 +1,833 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import os
+
+# Dados dos alunos restantes
+students = [
+    {
+        'id': 'student-004',
+        'name': 'GUILHERME AUGUSTO RODRIGUES NASCIMENTO',
+        'email': 'guilherme.nascimento@email.com',
+        'registration': '2024004',
+        'birth_date': '05/07/2006',
+        'phone': '(11) 99999-0004',
+        'filename': 'visageralalunogi.html'
+    },
+    {
+        'id': 'student-005',
+        'name': 'GUSTAVO HENRIQUE RODRIGUES NASCIMENTO',
+        'email': 'gustavo.nascimento@email.com',
+        'registration': '2024005',
+        'birth_date': '05/07/2006',
+        'phone': '(11) 99999-0005',
+        'filename': 'visaogeralalunog.html'
+    },
+    {
+        'id': 'student-006',
+        'name': 'JOÃO CARLOS MACIEL DOS SANTOS',
+        'email': 'joao.santos@email.com',
+        'registration': '2024006',
+        'birth_date': '18/11/2005',
+        'phone': '(11) 99999-0006',
+        'filename': 'visaogeralalunojc.html'
+    },
+    {
+        'id': 'student-007',
+        'name': 'JULIO KENNEDY SILVA SOUZA',
+        'email': 'julio.souza@email.com',
+        'registration': '2024007',
+        'birth_date': '30/01/2006',
+        'phone': '(11) 99999-0007',
+        'filename': 'visaogeralalunojk.html'
+    },
+    {
+        'id': 'student-008',
+        'name': 'LUIS FELIPE ALVES PEREIRA',
+        'email': 'luis.pereira@email.com',
+        'registration': '2024008',
+        'birth_date': '14/09/2005',
+        'phone': '(11) 99999-0008',
+        'filename': 'visaogeralalunolu.html'
+    }
+]
+
+# Template HTML base
+template = '''<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <script>
+  if (localStorage.getItem("logado") !== "true") {
+    window.location.href = "login.html";
+  }
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visão Geral - {name}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .student-profile {{
+      background-color: var(--secondary-bg);
+      border-radius: 8px;
+      padding: 30px;
+      margin-bottom: 20px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }}
+
+    .student-avatar {{
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--button-primary), var(--button-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 3rem;
+      color: var(--text-white);
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }}
+
+    .student-avatar:hover {{
+      transform: scale(1.05);
+      box-shadow: var(--shadow-hover);
+    }}
+
+    .photo-upload {{
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background-color: var(--button-primary);
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-white);
+      cursor: pointer;
+      border: 3px solid var(--secondary-bg);
+      transition: all 0.3s ease;
+    }}
+
+    .photo-upload:hover {{
+      background-color: var(--button-secondary);
+    }}
+
+    .student-photo {{
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }}
+
+    .student-info {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+      text-align: left;
+    }}
+
+    .info-item {{
+      background-color: var(--table-row-even);
+      padding: 15px;
+      border-radius: 6px;
+      border-left: 4px solid var(--button-primary);
+    }}
+
+    .info-item strong {{
+      color: var(--text-primary);
+      display: block;
+      margin-bottom: 5px;
+    }}
+
+    .tabs {{
+      display: flex;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }}
+
+    .tab-button {{
+      flex: 1;
+      padding: 15px;
+      background-color: var(--secondary-bg);
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all 0.3s ease;
+    }}
+
+    .tab-button.active {{
+      background-color: var(--button-primary);
+      color: var(--text-white);
+    }}
+
+    .tab-button:hover:not(.active) {{
+      background-color: var(--hover-bg);
+    }}
+
+    .tab-content {{
+      display: none;
+    }}
+
+    .tab-content.active {{
+      display: block;
+    }}
+
+    .grades-overview {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }}
+
+    .subject-card {{
+      background-color: var(--secondary-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }}
+
+    .subject-header {{
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }}
+
+    .subject-icon {{
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--button-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-white);
+      margin-right: 15px;
+    }}
+
+    .grade-item {{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border-color);
+    }}
+
+    .grade-item:last-child {{
+      border-bottom: none;
+    }}
+
+    .grade-value {{
+      font-weight: bold;
+      padding: 4px 8px;
+      border-radius: 4px;
+      color: var(--text-white);
+    }}
+
+    .grade-excellent {{ background-color: var(--button-success); }}
+    .grade-good {{ background-color: var(--button-warning); }}
+    .grade-poor {{ background-color: var(--button-danger); }}
+    .grade-empty {{ background-color: var(--text-secondary); }}
+
+    .attendance-overview {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }}
+
+    .attendance-card {{
+      background-color: var(--secondary-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }}
+
+    .attendance-stats {{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 15px;
+    }}
+
+    .attendance-stat {{
+      text-align: center;
+      padding: 15px;
+      border-radius: 6px;
+      background-color: var(--table-row-even);
+    }}
+
+    .attendance-stat .value {{
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }}
+
+    .attendance-stat .label {{
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }}
+
+    .status-badge {{
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-align: center;
+      margin-top: 10px;
+    }}
+
+    .status-approved {{ background-color: var(--button-success); color: var(--text-white); }}
+    .status-warning {{ background-color: var(--button-warning); color: var(--text-white); }}
+    .status-failed {{ background-color: var(--button-danger); color: var(--text-white); }}
+
+    .photo-modal {{
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }}
+
+    .photo-modal-content {{
+      background-color: var(--secondary-bg);
+      margin: 10% auto;
+      padding: 30px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }}
+
+    .photo-preview {{
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      margin: 20px auto;
+      border: 3px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--table-row-even);
+      overflow: hidden;
+    }}
+
+    .photo-preview img {{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }}
+
+    .photo-preview i {{
+      font-size: 4rem;
+      color: var(--text-secondary);
+    }}
+  </style>
+</head>
+<body>
+
+  <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <h2>Menu Principal</h2>
+    <a href="listadeusuarios.html"><i class="fas fa-user-graduate"></i> Alunos</a>
+    <a href="disciplinasnotas.html"><i class="fas fa-star"></i> Notas</a>
+    <a href="disciplinasfrequencias.html"><i class="fas fa-clipboard-list"></i> Frequência</a>
+    <a href="configprof.html" id="configLink"><i class="fas fa-cogs"></i> Configurações</a>
+    <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</a>
+  </div>
+
+  <div class="main">
+    <div class="header">
+      <h1>
+        <i class="fas fa-user-graduate" style="margin-right: 15px; color: var(--button-primary);"></i>
+        Visão Geral do Aluno
+      </h1>
+      <div class="welcome">
+        <i class="fas fa-user-circle" style="font-size: 2rem; margin-right: 10px;"></i>
+        <span id="welcomeUser">Bem-vindo!</span>
+      </div>
+    </div>
+
+    <!-- Perfil do Aluno -->
+    <div class="student-profile">
+      <div class="student-avatar" onclick="openPhotoModal()">
+        <img id="studentPhoto" class="student-photo" style="display: none;" alt="Foto do aluno">
+        <i id="defaultAvatar" class="fas fa-user-graduate"></i>
+        <div class="photo-upload">
+          <i class="fas fa-camera"></i>
+        </div>
+      </div>
+      <h2>{name}</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 20px;">Matrícula: {registration} | Curso: Técnico em Informática</p>
+      
+      <div class="student-info">
+        <div class="info-item">
+          <strong><i class="fas fa-envelope"></i> Email:</strong>
+          {email}
+        </div>
+        <div class="info-item">
+          <strong><i class="fas fa-calendar"></i> Data de Nascimento:</strong>
+          {birth_date}
+        </div>
+        <div class="info-item">
+          <strong><i class="fas fa-phone"></i> Telefone:</strong>
+          {phone}
+        </div>
+        <div class="info-item">
+          <strong><i class="fas fa-map-marker-alt"></i> Endereço:</strong>
+          São Paulo, SP
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs de Navegação -->
+    <div class="tabs">
+      <button class="tab-button active" onclick="switchTab('grades')">
+        <i class="fas fa-star"></i> Visão Geral das Notas
+      </button>
+      <button class="tab-button" onclick="switchTab('attendance')">
+        <i class="fas fa-clipboard-list"></i> Relatório de Frequência
+      </button>
+    </div>
+
+    <!-- Tab de Notas -->
+    <div id="gradesTab" class="tab-content active">
+      <div class="card">
+        <h3>
+          <i class="fas fa-star" style="margin-right: 10px; color: var(--button-primary);"></i>
+          Visão Geral das Notas por Disciplina
+        </h3>
+        <p>Acompanhe o desempenho acadêmico em todas as disciplinas do curso.</p>
+        
+        <div class="grades-overview" id="gradesOverview">
+          <!-- Notas serão carregadas dinamicamente -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab de Frequência -->
+    <div id="attendanceTab" class="tab-content">
+      <div class="card">
+        <h3>
+          <i class="fas fa-clipboard-list" style="margin-right: 10px; color: var(--button-primary);"></i>
+          Relatório de Frequência por Disciplina
+        </h3>
+        <p>Controle de presença e faltas em todas as disciplinas do curso.</p>
+        
+        <div class="attendance-overview" id="attendanceOverview">
+          <!-- Frequência será carregada dinamicamente -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Botão de Voltar -->
+    <div style="margin-top: 30px; text-align: center;">
+      <button class="btn btn-secondary" onclick="window.location.href='listadeusuarios.html'">
+        <i class="fas fa-arrow-left"></i> Voltar para Lista de Alunos
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Modal para Upload de Foto -->
+  <div id="photoModal" class="photo-modal">
+    <div class="photo-modal-content">
+      <h3><i class="fas fa-camera"></i> Foto do Aluno</h3>
+      
+      <div class="photo-preview" id="photoPreview">
+        <i class="fas fa-user-graduate"></i>
+      </div>
+      
+      <input type="file" id="photoInput" accept="image/*" style="display: none;">
+      
+      <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+        <button class="btn btn-primary" onclick="document.getElementById('photoInput').click()">
+          <i class="fas fa-upload"></i> Escolher Foto
+        </button>
+        <button class="btn btn-danger" onclick="removePhoto()">
+          <i class="fas fa-trash"></i> Remover
+        </button>
+        <button class="btn btn-secondary" onclick="closePhotoModal()">
+          <i class="fas fa-times"></i> Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span>© 2025 - Todos os direitos reservados</span>
+    <span>XBIUDERS MDD DO DEV</span>
+  </footer>
+
+  <script src="js/auth-manager.js"></script>
+  <script src="js/data-manager.js"></script>
+  <script>
+    const studentId = '{student_id}';
+    const studentName = '{name}';
+
+    // Disciplinas do curso
+    const subjects = [
+      {{ id: 'montagem1', name: 'Montagem e Manutenção I', icon: 'fas fa-tools' }},
+      {{ id: 'fundamentos', name: 'Fundamentos de Informática', icon: 'fas fa-computer' }},
+      {{ id: 'sistemas', name: 'Introdução a Sistemas Operacionais', icon: 'fas fa-desktop' }},
+      {{ id: 'logica', name: 'Lógica de Programação', icon: 'fas fa-code' }},
+      {{ id: 'montagem2', name: 'Montagem e Manutenção II', icon: 'fas fa-microchip' }},
+      {{ id: 'redes', name: 'Redes de Computadores', icon: 'fas fa-network-wired' }}
+    ];
+
+    // Inicialização da página
+    document.addEventListener('DOMContentLoaded', function() {{
+      const currentUser = authManager.getCurrentUser();
+      
+      if (!currentUser) {{
+        window.location.href = 'login.html';
+        return;
+      }}
+
+      // Atualiza mensagem de boas-vindas
+      document.getElementById('welcomeUser').textContent = `Bem-vindo, ${{currentUser.name}}!`;
+
+      // Controla visibilidade do link de configurações
+      if (!authManager.isAdmin()) {{
+        const configLink = document.getElementById('configLink');
+        if (configLink) {{
+          configLink.style.display = 'none';
+        }}
+      }}
+
+      loadStudentPhoto();
+      loadGradesOverview();
+      loadAttendanceOverview();
+    }});
+
+    // Carrega foto do aluno
+    function loadStudentPhoto() {{
+      const savedPhoto = localStorage.getItem(`foto_${{studentId}}`);
+      if (savedPhoto) {{
+        document.getElementById('studentPhoto').src = savedPhoto;
+        document.getElementById('studentPhoto').style.display = 'block';
+        document.getElementById('defaultAvatar').style.display = 'none';
+      }}
+    }}
+
+    // Abre modal de foto
+    function openPhotoModal() {{
+      const savedPhoto = localStorage.getItem(`foto_${{studentId}}`);
+      const preview = document.getElementById('photoPreview');
+      
+      if (savedPhoto) {{
+        preview.innerHTML = `<img src="${{savedPhoto}}" alt="Foto do aluno">`;
+      }} else {{
+        preview.innerHTML = '<i class="fas fa-user-graduate"></i>';
+      }}
+      
+      document.getElementById('photoModal').style.display = 'block';
+    }}
+
+    // Fecha modal de foto
+    function closePhotoModal() {{
+      document.getElementById('photoModal').style.display = 'none';
+    }}
+
+    // Remove foto
+    function removePhoto() {{
+      localStorage.removeItem(`foto_${{studentId}}`);
+      document.getElementById('studentPhoto').style.display = 'none';
+      document.getElementById('defaultAvatar').style.display = 'block';
+      document.getElementById('photoPreview').innerHTML = '<i class="fas fa-user-graduate"></i>';
+    }}
+
+    // Upload de foto
+    document.getElementById('photoInput').addEventListener('change', function(e) {{
+      const file = e.target.files[0];
+      if (file) {{
+        const reader = new FileReader();
+        reader.onload = function(e) {{
+          const photoData = e.target.result;
+          
+          // Salva no localStorage
+          localStorage.setItem(`foto_${{studentId}}`, photoData);
+          
+          // Atualiza a interface
+          document.getElementById('studentPhoto').src = photoData;
+          document.getElementById('studentPhoto').style.display = 'block';
+          document.getElementById('defaultAvatar').style.display = 'none';
+          
+          // Atualiza preview no modal
+          document.getElementById('photoPreview').innerHTML = `<img src="${{photoData}}" alt="Foto do aluno">`;
+        }};
+        reader.readAsDataURL(file);
+      }}
+    }});
+
+    // Carrega visão geral das notas
+    function loadGradesOverview() {{
+      const container = document.getElementById('gradesOverview');
+      let html = '';
+
+      subjects.forEach(subject => {{
+        const grades = getStudentGrades(subject.id, studentId);
+        const average = calculateAverage(grades);
+        const status = getGradeStatus(average);
+
+        html += `
+          <div class="subject-card">
+            <div class="subject-header">
+              <div class="subject-icon">
+                <i class="${{subject.icon}}"></i>
+              </div>
+              <div>
+                <h4 style="margin: 0; color: var(--text-primary);">${{subject.name}}</h4>
+                <p style="margin: 5px 0 0 0; color: var(--text-secondary); font-size: 0.9rem;">Disciplina do curso</p>
+              </div>
+            </div>
+            
+            <div class="grade-item">
+              <span>Atividades (0-15):</span>
+              <span class="grade-value ${{getGradeClass(grades.activities)}}">${{grades.activities || '-'}}</span>
+            </div>
+            
+            <div class="grade-item">
+              <span>Trabalhos (0-15):</span>
+              <span class="grade-value ${{getGradeClass(grades.assignments)}}">${{grades.assignments || '-'}}</span>
+            </div>
+            
+            <div class="grade-item">
+              <span>Provas (0-30):</span>
+              <span class="grade-value ${{getGradeClass(grades.exams)}}">${{grades.exams || '-'}}</span>
+            </div>
+            
+            <div class="grade-item">
+              <span>Prova Final (0-40):</span>
+              <span class="grade-value ${{getGradeClass(grades.finalExam)}}">${{grades.finalExam || '-'}}</span>
+            </div>
+            
+            <div class="grade-item">
+              <span>Recuperação (0-100):</span>
+              <span class="grade-value ${{getGradeClass(grades.recovery)}}">${{grades.recovery || '-'}}</span>
+            </div>
+            
+            <hr style="margin: 15px 0;">
+            
+            <div class="grade-item" style="font-weight: bold; font-size: 1.1rem;">
+              <span>Média Final:</span>
+              <span class="grade-value ${{getGradeClass(average)}}">${{average.toFixed(1)}}</span>
+            </div>
+            
+            <div class="status-badge ${{status.class}}">
+              <i class="${{status.icon}}"></i> ${{status.text}}
+            </div>
+          </div>
+        `;
+      }});
+
+      container.innerHTML = html;
+    }}
+
+    // Carrega visão geral da frequência
+    function loadAttendanceOverview() {{
+      const container = document.getElementById('attendanceOverview');
+      let html = '';
+
+      subjects.forEach(subject => {{
+        const attendance = getStudentAttendance(subject.id, studentId);
+        const percentage = attendance.totalClasses > 0 ? 
+          ((attendance.attendedClasses / attendance.totalClasses) * 100) : 0;
+        const status = getAttendanceStatus(percentage);
+
+        html += `
+          <div class="attendance-card">
+            <div class="subject-header">
+              <div class="subject-icon">
+                <i class="${{subject.icon}}"></i>
+              </div>
+              <div>
+                <h4 style="margin: 0; color: var(--text-primary);">${{subject.name}}</h4>
+                <p style="margin: 5px 0 0 0; color: var(--text-secondary); font-size: 0.9rem;">Controle de frequência</p>
+              </div>
+            </div>
+            
+            <div class="attendance-stats">
+              <div class="attendance-stat">
+                <div class="value" style="color: var(--button-success);">${{attendance.attendedClasses}}</div>
+                <div class="label">Presenças</div>
+              </div>
+              
+              <div class="attendance-stat">
+                <div class="value" style="color: var(--button-danger);">${{attendance.absences}}</div>
+                <div class="label">Faltas</div>
+              </div>
+              
+              <div class="attendance-stat">
+                <div class="value" style="color: var(--button-primary);">${{attendance.totalClasses}}</div>
+                <div class="label">Total de Aulas</div>
+              </div>
+              
+              <div class="attendance-stat">
+                <div class="value" style="color: var(--button-warning);">${{percentage.toFixed(1)}}%</div>
+                <div class="label">Frequência</div>
+              </div>
+            </div>
+            
+            <div class="status-badge ${{status.class}}">
+              <i class="${{status.icon}}"></i> ${{status.text}}
+            </div>
+          </div>
+        `;
+      }});
+
+      container.innerHTML = html;
+    }}
+
+    // Obtém notas do aluno para uma disciplina
+    function getStudentGrades(subjectId, studentId) {{
+      const savedGrades = localStorage.getItem(`notas_${{subjectId}}`);
+      if (!savedGrades) {{
+        return {{ activities: null, assignments: null, exams: null, finalExam: null, recovery: null }};
+      }}
+
+      const grades = JSON.parse(savedGrades);
+      const studentGrades = grades.find(g => g.studentId === studentId);
+      
+      return studentGrades || {{ activities: null, assignments: null, exams: null, finalExam: null, recovery: null }};
+    }}
+
+    // Obtém frequência do aluno para uma disciplina
+    function getStudentAttendance(subjectId, studentId) {{
+      const savedAttendance = localStorage.getItem(`frequencia_${{subjectId}}`);
+      if (!savedAttendance) {{
+        return {{ attendedClasses: 0, absences: 0, totalClasses: 0 }};
+      }}
+
+      const attendance = JSON.parse(savedAttendance);
+      const studentAttendance = attendance.find(a => a.studentId === studentId);
+      
+      if (!studentAttendance) {{
+        return {{ attendedClasses: 0, absences: 0, totalClasses: 0 }};
+      }}
+
+      return {{
+        attendedClasses: studentAttendance.attendedClasses || 0,
+        absences: studentAttendance.absences || 0,
+        totalClasses: studentAttendance.totalClasses || 0
+      }};
+    }}
+
+    // Calcula média ponderada
+    function calculateAverage(grades) {{
+      const activities = parseFloat(grades.activities) || 0;
+      const assignments = parseFloat(grades.assignments) || 0;
+      const exams = parseFloat(grades.exams) || 0;
+      const finalExam = parseFloat(grades.finalExam) || 0;
+      const recovery = parseFloat(grades.recovery) || 0;
+
+      if (recovery > 0) {{
+        return recovery;
+      }}
+
+      return activities + assignments + exams + finalExam;
+    }}
+
+    // Obtém classe CSS para nota
+    function getGradeClass(grade) {{
+      if (!grade || grade === '-') return 'grade-empty';
+      const numGrade = parseFloat(grade);
+      if (numGrade >= 70) return 'grade-excellent';
+      if (numGrade >= 50) return 'grade-good';
+      return 'grade-poor';
+    }}
+
+    // Obtém status da nota
+    function getGradeStatus(average) {{
+      if (average >= 70) {{
+        return {{ class: 'status-approved', icon: 'fas fa-check-circle', text: 'Aprovado' }};
+      }} else if (average >= 50) {{
+        return {{ class: 'status-warning', icon: 'fas fa-exclamation-triangle', text: 'Recuperação' }};
+      }} else {{
+        return {{ class: 'status-failed', icon: 'fas fa-times-circle', text: 'Reprovado' }};
+      }}
+    }}
+
+    // Obtém status da frequência
+    function getAttendanceStatus(percentage) {{
+      if (percentage >= 75) {{
+        return {{ class: 'status-approved', icon: 'fas fa-check-circle', text: 'Frequência Adequada' }};
+      }} else if (percentage >= 60) {{
+        return {{ class: 'status-warning', icon: 'fas fa-exclamation-triangle', text: 'Atenção - Frequência Baixa' }};
+      }} else {{
+        return {{ class: 'status-failed', icon: 'fas fa-times-circle', text: 'Reprovado por Falta' }};
+      }}
+    }}
+
+    // Troca entre tabs
+    function switchTab(tabName) {{
+      // Remove active de todos os botões e conteúdos
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      // Ativa o tab selecionado
+      document.querySelector(`[onclick="switchTab('${{tabName}}')"]`).classList.add('active');
+      document.getElementById(tabName + 'Tab').classList.add('active');
+    }}
+
+    // Fecha modal ao clicar fora
+    window.addEventListener('click', function(event) {{
+      const modal = document.getElementById('photoModal');
+      if (event.target === modal) {{
+        closePhotoModal();
+      }}
+    }});
+
+    function logout() {{
+      authManager.logout();
+      window.location.href = "login.html";
+    }}
+
+    function toggleSidebar() {{
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.querySelector('.sidebar-overlay');
+      
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }}
+  </script>
+
+</body>
+</html>'''
+
+# Gerar páginas para cada aluno
+for student in students:
+    content = template.format(
+        name=student['name'],
+        email=student['email'],
+        registration=student['registration'],
+        birth_date=student['birth_date'],
+        phone=student['phone'],
+        student_id=student['id']
+    )
+    
+    with open(student['filename'], 'w', encoding='utf-8') as f:
+        f.write(content)
+    
+    print(f"Página criada: {student['filename']}")
+
+print("Todas as páginas foram geradas com sucesso!")

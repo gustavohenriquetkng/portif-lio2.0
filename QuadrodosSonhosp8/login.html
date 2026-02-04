@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Cadastro Moderno</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container" id="login-form-container">
+            <h2>Entrar</h2>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="login-username">Nome de Usuário</label>
+                    <input type="text" id="login-username" required placeholder="Digite seu usuário">
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Senha</label>
+                    <input type="password" id="login-password" required placeholder="Digite sua senha">
+                </div>
+                <button type="submit" class="btn">Entrar</button>
+                <p class="toggle-text">Não tem uma conta? <a href="#" id="show-signup">Criar Conta</a></p>
+            </form>
+            <div id="login-message" class="message"></div>
+        </div>
+
+        <div class="form-container hidden" id="signup-form-container">
+            <h2>Criar Conta</h2>
+            <form id="signup-form">
+                <div class="input-group">
+                    <label for="signup-username">Nome de Usuário</label>
+                    <input type="text" id="signup-username" required placeholder="Escolha um usuário">
+                </div>
+                <div class="input-group">
+                    <label for="signup-password">Senha</label>
+                    <input type="password" id="signup-password" required placeholder="Escolha uma senha">
+                </div>
+                <button type="submit" class="btn">Criar Conta</button>
+                <p class="toggle-text">Já tem uma conta? <a href="#" id="show-login">Entrar</a></p>
+            </form>
+            <div id="signup-message" class="message"></div>
+        </div>
+    </div>
+    <script src="autentic.js"></script>
+</body>
+</html>

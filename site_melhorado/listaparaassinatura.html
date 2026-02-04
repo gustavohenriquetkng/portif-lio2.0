@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lista de Presença</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #1b2c52, #e2e6ec);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background-color: #1b2c52;
+      color: white;
+      width: 100%;
+      padding: 20px 0;
+      text-align: center;
+      font-size: 2em;
+    }
+
+    main {
+      background-color: #ffffff;
+      width: 100%;
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      color: #1b2c52;
+      text-align: center;
+    }
+
+    table {
+      width: 90%;
+      border-collapse: collapse;
+      margin: 20px auto;
+    }
+
+    th, td {
+      border: 1px solid #999;
+      padding: 12px;
+      text-align: left;
+      font-size: 16px;
+    }
+
+    th {
+      background-color: #1b2c52;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .assinatura-professor {
+      margin-top: 40px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .linha-assinatura {
+      margin-top: 5px;
+      border-top: 1px solid #000;
+      width: 300px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn-pdf {
+      background-color: #1b2c52;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 20px auto;
+      display: block;
+    }
+
+    .btn-pdf:hover {
+      background-color: #2d406d;
+    }
+
+    .footer {
+      background-color: #122941;
+      color: white;
+      font-size: 14px;
+      text-align: center;
+      padding: 15px;
+      margin-top: 30px;
+      width: 100%;
+    }
+
+    /* Oculta elementos na impressão/PDF */
+    @media print {
+      .btn-pdf {
+        display: none !important;
+      }
+      header {
+        background: none;
+        color: black;
+      }
+      .footer {
+        background: none;
+        color: black;
+        border-top: 1px solid #ccc;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+  <link rel="stylesheet" href="styles.css">Lista de Presença</header>
+
+  <main id="conteudo">
+    <h2>Lista de Presença para Assinatura</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nome do Aluno</th>
+          <th>Assinatura</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>ASAF ALCHAAR RAMALHO DE OLIVEIRA</td><td>__________________________________</td></tr>
+        <tr><td>AYMAR FERREIRA TELES</td><td>__________________________________</td></tr>
+        <tr><td>CARLOS GOMES HAUEISEN FREIRE</td><td>__________________________________</td></tr>
+        <tr><td>GUILHERME AUGUSTO RODRIGUES NASCIMENTO</td><td>__________________________________</td></tr>
+        <tr><td>GUSTAVO HENRIQUE RODRIGUES NASCIMENTO</td><td>__________________________________</td></tr>
+        <tr><td>JOÃO CARLOS MACIEL DOS SANTOS</td><td>__________________________________</td></tr>
+        <tr><td>JULIO KENNEDY SILVA SOUZA</td><td>__________________________________</td></tr>
+        <tr><td>LUIS FELIPE ALVES PEREIRA</td><td>__________________________________</td></tr>
+      </tbody>
+    </table>
+
+    <div class="assinatura-professor">
+      Assinatura do Professor:<br />
+      <div class="linha-assinatura"></div>
+    </div>
+
+    <button class="btn-pdf" onclick="gerarPDF()">Exportar como PDF</button>
+  </main>
+
+  <footer class="footer">
+    © 2025 - Todos os direitos reservados | XBIUDERS MDD DO DEV
+  </footer>
+
+  <!-- Script para gerar PDF -->
+  <script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+  <script>
+    function gerarPDF() {
+      const botao = document.querySelector('.btn-pdf');
+      botao.style.display = 'none';
+
+      const elemento = document.getElementById('conteudo');
+      const opcoes = {
+        margin: 0.5,
+        filename: 'lista_presenca.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opcoes).from(elemento).save().then(() => {
+        botao.style.display = 'block';
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Background RGB animado */
+body {
+    font-family: 'Lucida Sans', Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    background-size: 600% 600%;
+    background:
+        linear-gradient(
+            rgba(0, 0, 0, 0.35),
+            rgba(0, 0, 0, 0.35)
+        ),
+        url("https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8?w=1920&auto=format&fit=crop&q=85&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fG1lcmNhZG8lMjBkZSUyMGZydXRhc3xlbnwwfHwwfHx8MA%3D%3D");
+
+    background-size: cover;          /* ocupa toda a tela */
+    background-position: center;     /* centraliza */
+    background-repeat: no-repeat;    /* não repete */
+    background-attachment: fixed;   
+}
+
+
+/* MAIN ocupa a tela */
+.main {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+/* Container central */
+.container {
+    max-width: 1200px;
+    width: 100%;
+    padding: 30px;
+}
+
+/* Título */
+.section-titlle {
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #fff;
+}
+
+/* Busca */
+.search-container {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 30px;
+}
+
+.search-input {
+    width: 260px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    height: 38px;
+    text-align: center;
+}
+
+.search-btn {
+    background: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0 16px;
+    height: 38px;
+}
+
+/* GRID sempre 3 */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    justify-items: center;
+}
+
+/* CARD */
+.product-card {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+}
+
+.product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+.product-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    min-height: 60px;
+}
+
+.product-price {
+    font-size: 20px;
+    font-weight: bold;
+    color: #e00606;
+    margin-bottom: 5px;
+}
+
+.product-discount {
+    font-size: 14px;
+    color: #00a650;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+/* BOTÃO COMPRAR */
+
+/* Responsivo */
+@media (max-width: 900px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 500px) {
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.buy-btn {
+    background: #d80505;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 15px;
+    padding: 12px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.buy-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+header {
+    position: relative;
+    display: flex;              /* <-- isso ativa o layout em linha */
+    align-items: center;        /* alinha verticalmente */
+    justify-content: center; /* separa um do outro */
+    z-index: 10;
+    gap: 50px;                  /* espaço extra entre eles */
+}
+
+header h1 {
+    font-size: 3rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #ffffff;
+    text-align: center;
+    margin-top: 80px;
+}
+
+header h1::before {
+    content: '';
+    position: absolute;
+    
+    bottom: 3px;
+    left: 50%;
+    right: 50%;
+    transform: translateX(-50%);
+    width: 30%;
+    height: 5px;
+    background-color: #eee;
+}
+.btn{
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    font-size: 12px;
+    padding: 12px;
+    
+}

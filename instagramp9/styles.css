@@ -1,0 +1,188 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #fafafa;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: sans-serif;
+}
+body footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.container-img {
+    position: relative;
+    right: 100px;
+
+}
+
+.img-celular {
+    width: 450px;
+
+}
+
+.insta-lg {
+    margin-bottom: 20px;
+}
+
+.container-form {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #dbdbdb;
+    background: #fafafa;
+    padding: 50px 40px 20px 40px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+}
+
+.form-login {
+    display: flex;
+    flex-direction: column;
+
+}
+
+input {
+    height: 36px;
+    outline: none;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    padding-left: 5px;
+    margin-top: 10px;
+    color: #262626;
+    font-size: 12px;
+    background: #fafafa;
+}
+
+button {
+    background-color: #0095f6;
+    height: 30px;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    border: none;
+    color: white;
+    margin-top: 15px;
+    cursor: pointer;
+
+}
+
+button:hover {
+    background-color: #0084e0;
+}
+
+.login-facebook {
+    color: #385185;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+
+.ou {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #262626;
+    font-weight: bold;
+    font-size: 13px;
+    margin: 10px 0;
+}
+
+.esqueceu-senha {
+    color: #385185;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+
+}
+
+
+.cadastro {
+    color: #385185;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.ui {
+    color: #385185;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.insta-footer {
+    margin-top: 40px;
+    padding: 20px;
+    justify-content: end;
+    text-align: center;
+    font-size: 12px;
+    color: #8e8e8e;
+}
+
+.insta-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    list-style: none;
+    padding: 0;
+    margin-bottom: 16px;
+}
+
+.insta-links a {
+    text-decoration: none;
+    color: #8e8e8e;
+}
+
+.insta-links a:hover {
+    text-decoration: underline;
+}
+
+.insta-copy {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.insta-copy select {
+    border: none;
+    background: transparent;
+    color: #8e8e8e;
+    font-size: 12px;
+    cursor: pointer;
+}

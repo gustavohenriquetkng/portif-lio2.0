@@ -1,0 +1,399 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <script>
+  if (localStorage.getItem("logado") !== "true") {
+    window.location.href = "login.html";
+  }
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Alunos</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <h2>Menu Principal</h2>
+    <a href="listadeusuarios.html"><i class="fas fa-user-graduate"></i> Alunos</a>
+    <a href="disciplinasnotas.html"><i class="fas fa-star"></i> Notas</a>
+    <a href="disciplinasfrequencias.html"><i class="fas fa-clipboard-list"></i> Frequência</a>
+    <a href="configprof.html" id="configLink"><i class="fas fa-cogs"></i> Configurações</a>
+    <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</a>
+  </div>
+
+  <div class="main">
+    <div class="header">
+      <h1>
+        <i class="fas fa-user-graduate" style="margin-right: 15px; color: var(--button-primary);"></i>
+        Lista de Alunos
+      </h1>
+      <div class="welcome">
+        <i class="fas fa-user-circle" style="font-size: 2rem; margin-right: 10px;"></i>
+        <span id="welcomeUser">Bem-vindo!</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="controls">
+        <button id="addStudentBtn" class="btn btn-primary" style="display: none;">
+          <i class="fas fa-user-plus"></i> Adicionar Aluno
+        </button>
+        <button id="refreshBtn" class="btn btn-warning">
+          <i class="fas fa-sync"></i> Atualizar Lista
+        </button>
+        <button id="exportBtn" class="btn btn-success">
+          <i class="fas fa-download"></i> Exportar Lista
+        </button>
+      </div>
+
+      <div class="search-container" style="margin: 20px 0;">
+        <div class="input-group">
+          <label for="searchStudent">
+            <i class="fas fa-search"></i> Buscar Aluno:
+          </label>
+          <input type="text" id="searchStudent" placeholder="Digite o nome do aluno..." onkeyup="filterStudents()">
+        </div>
+      </div>
+
+      <div id="alertContainer"></div>
+
+      <div id="studentsContainer">
+        <!-- Lista de alunos será carregada aqui -->
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span>© 2025 - Todos os direitos reservados</span>
+    <span>XBIUDERS MDD DO DEV</span>
+  </footer>
+
+  <script src="js/auth-manager.js"></script>
+  <script>
+    // Lista de alunos padrão
+    const defaultStudents = [
+      {
+        id: 'student-001',
+        name: 'ASAF ALCHAAR RAMALHO DE OLIVEIRA',
+        email: 'asaf.oliveira@email.com',
+        registration: '2024001',
+        class: 'Técnico em Informática',
+        status: 'Ativo'
+      },
+      {
+        id: 'student-002',
+        name: 'AYMAR FERREIRA TELES',
+        email: 'aymar.teles@email.com',
+        registration: '2024002',
+        class: 'Técnico em Informática',
+        status: 'Ativo'
+      },
+      {
+        id: 'student-003',
+        name: 'CARLOS GOMES HAUEISEN FREIRE',
+        email: 'carlos.freire@email.com',
+        registration: '2024003',
+        class: 'Técnico em Informática',
+        status: 'Ativo'
+      },
+      {
+        id: 'student-004',
+        name: 'GUILHERME AUGUSTO RODRIGUES NASCIMENTO',
+        email: 'guilherme.nascimento@email.com',
+        registration: '2024004',
+        class: 'Técnico em Informática',
+        status: 'Ativo'
+      },
+      {
+        id: 'student-005',
+        name: 'GUSTAVO HENRIQUE RODRIGUES NASCIMENTO',
+        email: 'gustavo.nascimento@email.com',
+        registration: '2024005',
+        class: 'Técnico em Informática',
+        status: 'Ativo'
+      },
+      {
+        id: 'student-006',
+        name: 'JOÃO CARLOS MACIEL DOS SANTOS',
+        email: 'joao.santos@email.com',
+        registration: '2024006',
+        class: 'Técnico em Informática',
+        status: 'Ativo'
+      },
+      {
+        id: 'student-007',
+        name: 'JULIO KENNEDY SILVA SOUZA',
+        email: 'julio.souza@email.com',
+        registration: '2024007',
+        class: 'Técnico em Informática',
+        status: 'Ativo'
+      },
+      {
+        id: 'student-008',
+        name: 'LUIS FELIPE ALVES PEREIRA',
+        email: 'luis.pereira@email.com',
+        registration: '2024008',
+        class: 'Técnico em Informática',
+        status: 'Ativo'
+      }
+    ];
+
+    let students = [];
+
+    // Inicialização da página
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentUser = authManager.getCurrentUser();
+      
+      if (!currentUser) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Atualiza mensagem de boas-vindas
+      document.getElementById('welcomeUser').textContent = `Bem-vindo, ${currentUser.name}!`;
+
+      // Controla visibilidade do link de configurações
+      if (!authManager.isAdmin()) {
+        const configLink = document.getElementById('configLink');
+        if (configLink) {
+          configLink.style.display = 'none';
+        }
+      }
+
+      // Controla botão de adicionar aluno (apenas admin)
+      if (authManager.canAddStudents()) {
+        document.getElementById('addStudentBtn').style.display = 'inline-block';
+      }
+
+      loadStudents();
+    });
+
+    // Carrega lista de alunos
+    function loadStudents() {
+      const savedStudents = localStorage.getItem('sistema_alunos');
+      
+      if (savedStudents) {
+        students = JSON.parse(savedStudents);
+      } else {
+        students = defaultStudents;
+        saveStudents();
+      }
+
+      displayStudents(students);
+    }
+
+    // Salva lista de alunos
+    function saveStudents() {
+      localStorage.setItem('sistema_alunos', JSON.stringify(students));
+    }
+
+    // Exibe lista de alunos
+    function displayStudents(studentList) {
+      const container = document.getElementById('studentsContainer');
+      
+      if (studentList.length === 0) {
+        container.innerHTML = `
+          <div class="card" style="text-align: center; padding: 40px;">
+            <i class="fas fa-user-graduate" style="font-size: 3rem; color: var(--text-secondary); margin-bottom: 15px;"></i>
+            <h3>Nenhum aluno encontrado</h3>
+            <p>A lista de alunos está vazia.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '<div style="display: grid; gap: 15px;">';
+      
+      studentList.forEach(student => {
+        html += `
+          <div class="student-card" style="background-color: var(--secondary-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; box-shadow: var(--shadow); transition: all 0.3s ease;" onmouseover="this.style.boxShadow='var(--shadow-hover)'" onmouseout="this.style.boxShadow='var(--shadow)'">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+              <div>
+                <h3 style="margin: 0; color: var(--text-primary);">
+                  <i class="fas fa-user-graduate"></i> ${student.name}
+                </h3>
+                <div style="margin-top: 5px;">
+                  <span style="padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; background-color: var(--button-success); color: var(--text-white);">
+                    <i class="fas fa-check-circle"></i> ${student.status}
+                  </span>
+                </div>
+              </div>
+              <div style="display: flex; gap: 10px;">
+                <button class="btn btn-primary" onclick="viewStudentDetails('${student.id}')" style="padding: 8px 12px;">
+                  <i class="fas fa-eye"></i> Ver Detalhes
+                </button>
+                ${authManager.canAddStudents() ? `
+                <button class="btn btn-warning" onclick="editStudent('${student.id}')" style="padding: 8px 12px;">
+                  <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="btn btn-danger" onclick="deleteStudent('${student.id}')" style="padding: 8px 12px;">
+                  <i class="fas fa-trash"></i> Excluir
+                </button>
+                ` : ''}
+              </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+              <div>
+                <strong><i class="fas fa-id-card"></i> Matrícula:</strong><br>
+                ${student.registration}
+              </div>
+              <div>
+                <strong><i class="fas fa-envelope"></i> Email:</strong><br>
+                ${student.email}
+              </div>
+              <div>
+                <strong><i class="fas fa-graduation-cap"></i> Curso:</strong><br>
+                ${student.class}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      html += '</div>';
+      container.innerHTML = html;
+    }
+
+    // Filtra alunos por nome
+    function filterStudents() {
+      const searchTerm = document.getElementById('searchStudent').value.toLowerCase();
+      const filteredStudents = students.filter(student => 
+        student.name.toLowerCase().includes(searchTerm)
+      );
+      displayStudents(filteredStudents);
+    }
+
+    // Ver detalhes do aluno
+    function viewStudentDetails(studentId) {
+      const student = students.find(s => s.id === studentId);
+      if (!student) {
+        showAlert('alertContainer', 'Aluno não encontrado.', 'error');
+        return;
+      }
+
+      // Redireciona para página de visão geral do aluno
+      const studentPages = {
+        'student-001': 'visaogeralalunoas.html',
+        'student-002': 'visaogeralalunoay.html',
+        'student-003': 'visaogeralalunocl.html',
+        'student-004': 'visageralalunogi.html',
+        'student-005': 'visaogeralalunog.html',
+        'student-006': 'visaogeralalunojc.html',
+        'student-007': 'visaogeralalunojk.html',
+        'student-008': 'visaogeralalunolu.html'
+      };
+
+      const studentPage = studentPages[studentId];
+      if (studentPage) {
+        window.location.href = studentPage;
+      } else {
+        showAlert('alertContainer', 'Página do aluno não encontrada.', 'error');
+      }
+    }
+
+    // Editar aluno (apenas admin)
+    function editStudent(studentId) {
+      if (!authManager.canAddStudents()) {
+        showAlert('alertContainer', 'Você não tem permissão para editar alunos.', 'error');
+        return;
+      }
+      
+      const student = students.find(s => s.id === studentId);
+      if (!student) {
+        showAlert('alertContainer', 'Aluno não encontrado.', 'error');
+        return;
+      }
+
+      // Implementar modal de edição aqui
+      showAlert('alertContainer', 'Funcionalidade de edição em desenvolvimento.', 'error');
+    }
+
+    // Excluir aluno (apenas admin)
+    function deleteStudent(studentId) {
+      if (!authManager.canAddStudents()) {
+        showAlert('alertContainer', 'Você não tem permissão para excluir alunos.', 'error');
+        return;
+      }
+
+      const student = students.find(s => s.id === studentId);
+      if (!student) {
+        showAlert('alertContainer', 'Aluno não encontrado.', 'error');
+        return;
+      }
+
+      if (confirm(`Tem certeza que deseja excluir o aluno "${student.name}"?`)) {
+        students = students.filter(s => s.id !== studentId);
+        saveStudents();
+        loadStudents();
+        showAlert('alertContainer', 'Aluno excluído com sucesso!', 'success');
+      }
+    }
+
+    // Mostra alerta
+    function showAlert(containerId, message, type = 'error') {
+      const container = document.getElementById(containerId);
+      container.innerHTML = `
+        <div style="padding: 12px; border-radius: 4px; margin-bottom: 15px; font-size: 0.9rem; background-color: ${type === 'success' ? '#d4edda' : '#f8d7da'}; color: ${type === 'success' ? '#155724' : '#721c24'}; border: 1px solid ${type === 'success' ? '#c3e6cb' : '#f5c6cb'};">
+          <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i>
+          ${message}
+        </div>
+      `;
+      
+      // Remove alerta após 5 segundos
+      setTimeout(() => {
+        container.innerHTML = '';
+      }, 5000);
+    }
+
+    // Event Listeners
+    document.getElementById('refreshBtn').addEventListener('click', function() {
+      loadStudents();
+      showAlert('alertContainer', 'Lista atualizada com sucesso!', 'success');
+    });
+
+    document.getElementById('exportBtn').addEventListener('click', function() {
+      const data = {
+        students: students,
+        exportDate: new Date().toISOString(),
+        exportedBy: authManager.getCurrentUser().name
+      };
+      
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `lista_alunos_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      showAlert('alertContainer', 'Lista exportada com sucesso!', 'success');
+    });
+
+    function logout() {
+      authManager.logout();
+      window.location.href = "login.html";
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.querySelector('.sidebar-overlay');
+      
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+  </script>
+
+</body>
+</html>
+      

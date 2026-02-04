@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <script>
+  if (localStorage.getItem("logado") !== "true") {
+    window.location.href = "login.html";
+  }
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XBIUDERSMDD</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+
+  <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <h2>Menu Principal</h2>
+    <a href="listadeusuarios.html"><i class="fas fa-user-graduate"></i> Alunos</a>
+    <a href="diario.html"><i class="fas fa-book"></i> Diário</a>
+    <a href="disciplinasnotas.html"><i class="fas fa-star"></i> Notas</a>
+    <a href="disciplinasfrequencias.html"><i class="fas fa-clipboard-list"></i> Frequência</a>
+    <a href="configprof.html"><i class="fas fa-cogs"></i> Configurações</a>
+    <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</a>
+  </div>
+
+  <div class="main">
+    <div class="header">
+      <h1>
+        <i class="fas fa-server" style="margin-right: 15px; color: var(--button-primary);"></i>
+         Sistemas Operacionais
+      </h1>
+      <div class="welcome">
+        <i class="fas fa-user-circle" style="font-size: 2rem; margin-right: 10px;"></i>
+        <span></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="controls">
+        <button id="saveBtn" class="btn btn-primary">
+          <i class="fas fa-save"></i> Salvar Notas
+        </button>
+        <button id="loadBtn" class="btn btn-warning">
+          <i class="fas fa-download"></i> Carregar Notas
+        </button>
+        <button id="clearBtn" class="btn btn-danger">
+          <i class="fas fa-trash"></i> Limpar Tudo
+        </button>
+        <button id="calcularBtn" class="btn btn-success">
+          <i class="fas fa-calculator"></i> Calcular Médias
+        </button>
+        <button id="exportPdfBtn" class="btn btn-primary">
+          <i class="fas fa-file-pdf"></i> Exportar PDF
+        </button>
+      </div>
+
+      <div class="table-container">
+        <table id="gradesTable">
+          <thead>
+            <tr>
+              <th>Nome do Aluno</th>
+              <th>Atividades<br>(0-15)</th>
+              <th>Trabalhos<br>(0-15)</th>
+              <th>Provas<br>(0-30)</th>
+              <th>Prova Final<br>(0-40)</th>
+              <th>Recuperação<br>(0-100)</th>
+              <th>Média</th>
+              <th>Situação</th>
+            </tr>
+          </thead>
+          <tbody id="gradesTableBody">
+            <!-- Dados serão carregados dinamicamente -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="stats-container" id="statsContainer">
+        <div class="stat-card">
+          <h3><i class="fas fa-users"></i> Estatísticas Gerais</h3>
+          <p class="stat-value" id="totalStudents">-</p>
+          <p class="stat-description">Total de alunos na turma</p>
+        </div>
+        
+        <div class="stat-card">
+          <h3><i class="fas fa-chart-line"></i> Média da Turma</h3>
+          <p class="stat-value" id="classAverage">-</p>
+          <p class="stat-description">Média geral de todas as atividades</p>
+        </div>
+        
+        <div class="stat-card">
+          <h3><i class="fas fa-graduation-cap"></i> Situação dos Alunos</h3>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center;">
+            <div>
+              <p class="stat-value" id="approvedStudents" style="color: var(--button-success);">-</p>
+              <p class="stat-description">Aprovados</p>
+            </div>
+            <div>
+              <p class="stat-value" id="recoveryStudents" style="color: var(--button-warning);">-</p>
+              <p class="stat-description">Recuperação</p>
+            </div>
+            <div>
+              <p class="stat-value" id="failedStudents" style="color: var(--button-danger);">-</p>
+              <p class="stat-description">Reprovados</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <h3><i class="fas fa-user-check"></i> Estatísticas por Aluno</h3>
+          <div class="input-group">
+            <select id="studentSelector" style="width: 100%;">
+              <option value="">Selecione um aluno</option>
+            </select>
+          </div>
+          <div id="studentStats" style="margin-top: 15px;">
+            <p>Selecione um aluno para ver suas estatísticas detalhadas.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span>© 2025 - Todos os direitos reservados</span>
+    <span>XBIUDERS MDD DO DEV</span>
+  </footer>
+
+  <script src="js/data-manager.js"></script>
+  <script>
+    const SUBJECT_ID = 'montagem1';
+    
+    // Inicialização da página
+    document.addEventListener('DOMContentLoaded', function() {
+      loadStudentsTable();
+      loadStudentSelector();
+      updateStatistics();
+    });
+
+    // Carrega a tabela de alunos
+    function loadStudentsTable() {
+      const tbody = document.getElementById('gradesTableBody');
+      const students = dataManager.getStudents();
+      
+      tbody.innerHTML = '';
+      
+      students.forEach(student => {
+        const grades = dataManager.getStudentGrades(student.id, SUBJECT_ID);
+        const row = document.createElement('tr');
+        
+        row.innerHTML = `
+          <td>${student.name}</td>
+          <td><input type="number" min="0" max="15" step="0.1" class="activity" value="${grades.activities || ''}" data-student="${student.id}"></td>
+          <td><input type="number" min="0" max="15" step="0.1" class="work" value="${grades.works || ''}" data-student="${student.id}"></td>
+          <td><input type="number" min="0" max="30" step="0.1" class="test" value="${grades.tests || ''}" data-student="${student.id}"></td>
+          <td><input type="number" min="0" max="40" step="0.1" class="final" value="${grades.final || ''}" data-student="${student.id}"></td>
+          <td><input type="number" min="0" max="100" step="0.1" class="recovery" value="${grades.recovery || ''}" data-student="${student.id}"></td>
+          <td class="average">${grades.average || '-'}</td>
+          <td class="status">${grades.status || '-'}</td>
+        `;
+        
+        tbody.appendChild(row);
+      });
+
+      // Adiciona eventos aos inputs
+      const inputs = tbody.querySelectorAll('input');
+      inputs.forEach(input => {
+        input.addEventListener('change', function() {
+          saveStudentGrades(this.dataset.student);
+          updateStatistics();
+        });
+      });
+    }
+
+    // Carrega o seletor de alunos
+    function loadStudentSelector() {
+      const selector = document.getElementById('studentSelector');
+      const students = dataManager.getStudents();
+      
+      selector.innerHTML = '<option value="">Selecione um aluno</option>';
+      
+      students.forEach((student, index) => {
+        const option = document.createElement('option');
+        option.value = student.id;
+        option.textContent = student.name;
+        selector.appendChild(option);
+      });
+    }
+
+    // Salva as notas de um aluno específico
+    function saveStudentGrades(studentId) {
+      const row = document.querySelector(`input[data-student="${studentId}"]`).closest('tr');
+      
+      const grades = {
+        activities: parseFloat(row.querySelector('.activity').value) || 0,
+        works: parseFloat(row.querySelector('.work').value) || 0,
+        tests: parseFloat(row.querySelector('.test').value) || 0,
+        final: parseFloat(row.querySelector('.final').value) || 0,
+        recovery: parseFloat(row.querySelector('.recovery').value) || 0
+      };
+
+      const result = dataManager.setStudentGrades(studentId, SUBJECT_ID, grades);
+      
+      // Atualiza a linha da tabela
+      row.querySelector('.average').textContent = result.average;
+      row.querySelector('.status').innerHTML = getStatusHTML(result.status);
+    }
+
+    // Retorna HTML formatado para o status
+    function getStatusHTML(status) {
+      let indicator = '';
+      if (status.includes('Aprovado')) {
+        indicator = '<span class="status-indicator status-aprovado"></span>';
+      } else if (status.includes('Recuperação')) {
+        indicator = '<span class="status-indicator status-recuperacao"></span>';
+      } else if (status.includes('Reprovado')) {
+        indicator = '<span class="status-indicator status-reprovado"></span>';
+      }
+      return indicator + status;
+    }
+
+    // Atualiza as estatísticas
+    function updateStatistics() {
+      const stats = dataManager.getClassStatistics(SUBJECT_ID);
+      
+      document.getElementById('totalStudents').textContent = stats.totalStudents;
+      document.getElementById('classAverage').textContent = stats.grades.average;
+      document.getElementById('approvedStudents').textContent = stats.grades.approved;
+      document.getElementById('recoveryStudents').textContent = stats.grades.recovery;
+      document.getElementById('failedStudents').textContent = stats.grades.failed;
+    }
+
+    // Event Listeners
+    document.getElementById('saveBtn').addEventListener('click', function() {
+      const students = dataManager.getStudents();
+      students.forEach(student => {
+        saveStudentGrades(student.id);
+      });
+      alert('Notas salvas com sucesso!');
+    });
+
+    document.getElementById('loadBtn').addEventListener('click', function() {
+      loadStudentsTable();
+      updateStatistics();
+      alert('Notas carregadas com sucesso!');
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', function() {
+      if (confirm('Tem certeza que deseja limpar todas as notas? Isso não pode ser desfeito.')) {
+        const students = dataManager.getStudents();
+        students.forEach(student => {
+          dataManager.setStudentGrades(student.id, SUBJECT_ID, {
+            activities: 0, works: 0, tests: 0, final: 0, recovery: 0
+          });
+        });
+        loadStudentsTable();
+        updateStatistics();
+        alert('Todas as notas foram limpas!');
+      }
+    });
+
+    document.getElementById('calcularBtn').addEventListener('click', function() {
+      const students = dataManager.getStudents();
+      students.forEach(student => {
+        saveStudentGrades(student.id);
+      });
+      updateStatistics();
+      alert('Médias calculadas com sucesso!');
+    });
+
+    document.getElementById('exportPdfBtn').addEventListener('click', function() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      // Título
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(20);
+      doc.text('Relatório de Notas - Montagem e Manutenção I', 105, 15, {align: 'center'});
+      
+      // Data
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(12);
+      doc.text(`Data: ${new Date().toLocaleDateString()}`, 105, 25, {align: 'center'});
+      
+      // Dados da tabela
+      const rows = [];
+      const students = dataManager.getStudents();
+      students.forEach(student => {
+        const grades = dataManager.getStudentGrades(student.id, SUBJECT_ID);
+        rows.push([
+          student.name,
+          grades.activities || '-',
+          grades.works || '-',
+          grades.tests || '-',
+          grades.final || '-',
+          grades.recovery || '-',
+          grades.average || '-',
+          grades.status || '-'
+        ]);
+      });
+      
+      // Gera tabela
+      doc.autoTable({
+        head: [['Aluno', 'Ativ.', 'Trab.', 'Prova', 'Final', 'Recup.', 'Média', 'Situação']],
+        body: rows,
+        startY: 30,
+        styles: {
+          fontSize: 9,
+          cellPadding: 2,
+        },
+        headStyles: {
+          fillColor: [74, 111, 165],
+          textColor: 255,
+          fontStyle: 'bold'
+        }
+      });
+      
+      doc.save(`notas_montagem1_${new Date().toISOString().slice(0,10)}.pdf`);
+    });
+
+    document.getElementById('studentSelector').addEventListener('change', function() {
+      const studentId = this.value;
+      const statsContainer = document.getElementById('studentStats');
+      
+      if (!studentId) {
+        statsContainer.innerHTML = '<p>Selecione um aluno para ver suas estatísticas detalhadas.</p>';
+        return;
+      }
+      
+      const student = dataManager.getStudent(studentId);
+      const grades = dataManager.getStudentGrades(studentId, SUBJECT_ID);
+      
+      statsContainer.innerHTML = `
+        <h4>${student.name}</h4>
+        <div style="margin-top: 15px;">
+          <p><strong>Atividades:</strong> ${grades.activities || 0}</p>
+          <p><strong>Trabalhos:</strong> ${grades.works || 0}</p>
+          <p><strong>Provas:</strong> ${grades.tests || 0}</p>
+          <p><strong>Prova Final:</strong> ${grades.final || 0}</p>
+          ${grades.recovery > 0 ? `<p><strong>Recuperação:</strong> ${grades.recovery}</p>` : ''}
+          <p><strong>Média:</strong> ${grades.average || 'Não calculada'}</p>
+          <p><strong>Situação:</strong> ${grades.status || 'Não definida'}</p>
+        </div>
+      `;
+    });
+
+    function logout() {
+      localStorage.removeItem("logado");
+      window.location.href = "login.html";
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.querySelector('.sidebar-overlay');
+      
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+  </script>
+
+</body>
+</html>
+

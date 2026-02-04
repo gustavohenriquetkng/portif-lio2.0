@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XBIUDERSMDD</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, var(--button-primary), var(--button-secondary));
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      font-family: var(--font-family);
+    }
+
+    .login-wrapper {
+      background-color: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      backdrop-filter: blur(10px);
+    }
+
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: var(--text-primary);
+      font-size: 1.8rem;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--button-primary);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--button-primary), var(--button-secondary));
+      color: var(--text-white);
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+    }
+
+    .alert {
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      font-size: 0.9rem;
+    }
+
+    .alert-error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .default-users {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+
+    .default-users h4 {
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+
+    .user-credential {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding: 8px;
+      background-color: var(--table-row-even);
+      border-radius: 4px;
+    }
+
+    .user-credential button {
+      padding: 4px 12px;
+      font-size: 0.8rem;
+      width: auto;
+      margin: 0;
+    }
+
+    .footer-text {
+      text-align: center;
+      margin-top: 20px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-wrapper">
+    <div class="login-container">
+      <h2>
+        <i class="fas fa-graduation-cap" style="margin-right: 10px; color: var(--button-primary);"></i>
+        Sistema Educacional
+      </h2>
+      
+      <div id="loginAlert"></div>
+      
+      <form id="loginForm">
+        <div class="input-group">
+          <label for="loginUsuario">
+            <i class="fas fa-user"></i> Usuário:
+          </label>
+          <input type="text" id="loginUsuario" name="usuario" required>
+        </div>
+        
+        <div class="input-group">
+          <label for="loginSenha">
+            <i class="fas fa-lock"></i> Senha:
+          </label>
+          <input type="password" id="loginSenha" name="senha" required>
+        </div>
+        
+        <button type="submit" class="btn">
+          <i class="fas fa-sign-in-alt"></i> Entrar
+        </button>
+      </form>
+      
+      <div class="footer-text">
+        © 2025 - Sistema Educacional
+      </div>
+    </div>
+
+    <!-- Usuários padrão para teste -->
+    <div class="default-users">
+      <h4><i class="fas fa-info-circle"></i> Usuários para Teste:</h4>
+      <div class="user-credential">
+        <span><strong>Admin:</strong> tavin.xbiueder</span>
+        <button onclick="fillLogin('tavin.xbiueder', 'sula5128')" class="btn">
+          Usar
+        </button>
+      </div>
+      <div class="user-credential">
+        <span><strong>Professor:</strong> professor</span>
+        <button onclick="fillLogin('professor', 'prof123')" class="btn">
+          Usar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/auth-manager.js"></script>
+  <script>
+    // Verifica se já está logado
+    if (authManager.isLoggedIn()) {
+      window.location.href = "telainicial.html";
+    }
+
+    // Preenche campos de login automaticamente
+    function fillLogin(username, password) {
+      document.getElementById('loginUsuario').value = username;
+      document.getElementById('loginSenha').value = password;
+    }
+
+    // Mostra alerta
+    function showAlert(message, type = 'error') {
+      const alertDiv = document.getElementById('loginAlert');
+      alertDiv.innerHTML = `
+        <div class="alert alert-${type}">
+          <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i>
+          ${message}
+        </div>
+      `;
+    }
+
+    // Limpa alertas
+    function clearAlerts() {
+      document.getElementById('loginAlert').innerHTML = '';
+    }
+
+    // Form de Login
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      clearAlerts();
+      
+      const usuario = document.getElementById('loginUsuario').value;
+      const senha = document.getElementById('loginSenha').value;
+      
+      if (!usuario || !senha) {
+        showAlert('Por favor, preencha todos os campos.');
+        return;
+      }
+
+      // Tenta fazer login
+      const loginResult = authManager.login(usuario, senha);
+      
+      if (loginResult.success) {
+        // Login bem-sucedido
+        window.location.href = "telainicial.html";
+      } else {
+        // Erro no login
+        showAlert(loginResult.message);
+      }
+    });
+  </script>
+
+</body>
+</html>
+

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <script>
+  if (localStorage.getItem("logado") !== "true") {
+    window.location.href = "login.html";
+  }
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XBIUDERSMDD</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <h2>Menu Principal</h2>
+    <a href="listadeusuarios.html"><i class="fas fa-user-graduate"></i> Alunos</a>
+    <a href="diario.html"><i class="fas fa-book"></i> Diário</a>
+    <a href="disciplinasnotas.html"><i class="fas fa-star"></i> Notas</a>
+    <a href="disciplinasfrequencias.html"><i class="fas fa-clipboard-list"></i> Frequência</a>
+    <a href="configprof.html"><i class="fas fa-cogs"></i> Configurações</a>
+    <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</a>
+  </div>
+
+  <div class="main">
+    <div class="header">
+      <h1>
+        <i class="fas fa-tools" style="margin-right: 15px; color: var(--button-primary);"></i>
+        Montagem e Manutenção I
+      </h1>
+      <div class="welcome">
+        <i class="fas fa-user-circle" style="font-size: 2rem; margin-right: 10px;"></i>
+        <span></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="controls">
+        <button id="saveBtn" class="btn btn-primary">
+          <i class="fas fa-save"></i> Salvar Frequência
+        </button>
+        <button id="loadBtn" class="btn btn-warning">
+          <i class="fas fa-download"></i> Carregar Dados
+        </button>
+        <button id="clearBtn" class="btn btn-danger">
+          <i class="fas fa-trash"></i> Limpar Tudo
+        </button>
+        <button id="calcularBtn" class="btn btn-success">
+          <i class="fas fa-calculator"></i> Calcular Percentuais
+        </button>
+        <button id="addClassBtn" class="btn btn-primary">
+          <i class="fas fa-plus"></i> Adicionar Aula
+        </button>
+      </div>
+
+      <div class="card" style="margin-bottom: 20px;">
+        <h3><i class="fas fa-calendar-alt"></i> Configuração de Aulas</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+          <div class="input-group">
+            <label for="totalClasses">Total de Aulas Ministradas:</label>
+            <input type="number" id="totalClasses" min="0" value="0">
+          </div>
+          
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table id="attendanceTable">
+          <thead>
+            <tr>
+              <th>Nome do Aluno</th>
+              <th>Aulas Assistidas</th>
+              <th>Total de Aulas</th>
+              <th>Percentual</th>
+              <th>Situação</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="attendanceTableBody">
+            <!-- Dados serão carregados dinamicamente -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="stats-container" id="statsContainer">
+        <div class="stat-card">
+          <h3><i class="fas fa-users"></i> Estatísticas Gerais</h3>
+          <p class="stat-value" id="totalStudents">-</p>
+          <p class="stat-description">Total de alunos na turma</p>
+          <p class="stat-value" id="totalClassesCount">-</p>
+          <p class="stat-description">Total de aulas ministradas</p>
+        </div>
+        
+        <div class="stat-card">
+          <h3><i class="fas fa-chart-line"></i> Frequência da Turma</h3>
+          <p class="stat-value" id="classAttendanceAverage">-</p>
+          <p class="stat-description">Média de frequência da turma</p>
+        </div>
+        
+        <div class="stat-card">
+          <h3><i class="fas fa-graduation-cap"></i> Situação dos Alunos</h3>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center;">
+            <div>
+              <p class="stat-value" id="approvedAttendance" style="color: var(--button-success);">-</p>
+              <p class="stat-description">Aprovados (≥75%)</p>
+            </div>
+            <div>
+              <p class="stat-value" id="warningAttendance" style="color: var(--button-warning);">-</p>
+              <p class="stat-description">Atenção (60-74%)</p>
+            </div>
+            <div>
+              <p class="stat-value" id="failedAttendance" style="color: var(--button-danger);">-</p>
+              <p class="stat-description">Reprovados (<60%)</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <h3><i class="fas fa-calendar-check"></i> Histórico de Aulas</h3>
+          <div id="classHistory" style="max-height: 200px; overflow-y: auto;">
+            <p>Nenhuma aula registrada ainda.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span>© 2025 - Todos os direitos reservados</span>
+    <span>XBIUDERS MDD DO DEV</span>
+  </footer>
+
+  <script src="js/data-manager.js"></script>
+  <script>
+    const SUBJECT_ID = 'montagem1';
+    let classHistory = JSON.parse(localStorage.getItem(`classHistory_${SUBJECT_ID}`)) || [];
+    
+    // Inicialização da página
+    document.addEventListener('DOMContentLoaded', function() {
+      loadAttendanceTable();
+      updateStatistics();
+      loadClassHistory();
+      document.getElementById('classDate').value = new Date().toISOString().split('T')[0];
+    });
+
+    // Carrega a tabela de frequência
+    function loadAttendanceTable() {
+      const tbody = document.getElementById('attendanceTableBody');
+      const students = dataManager.getStudents();
+      const totalClasses = parseInt(document.getElementById('totalClasses').value) || 0;
+      
+      tbody.innerHTML = '';
+      
+      students.forEach(student => {
+        const attendance = dataManager.getStudentAttendance(student.id, SUBJECT_ID);
+        const row = document.createElement('tr');
+        
+        row.innerHTML = `
+          <td>${student.name}</td>
+          <td>
+            <input type="number" min="0" max="${totalClasses}" class="attended" 
+                   value="${attendance.attendedClasses || 0}" data-student="${student.id}">
+          </td>
+          <td>${totalClasses}</td>
+          <td class="percentage">${attendance.percentage || 0}%</td>
+          <td class="status">${getStatusHTML(attendance.status || 'Sem dados')}</td>
+          <td>
+            <button class="btn btn-primary" onclick="markPresent('${student.id}')" style="padding: 5px 10px; margin: 2px;">
+              <i class="fas fa-check"></i>
+            </button>
+            <button class="btn btn-danger" onclick="markAbsent('${student.id}')" style="padding: 5px 10px; margin: 2px;">
+              <i class="fas fa-times"></i>
+            </button>
+          </td>
+        `;
+        
+        tbody.appendChild(row);
+      });
+
+      // Adiciona eventos aos inputs
+      const inputs = tbody.querySelectorAll('input.attended');
+      inputs.forEach(input => {
+        input.addEventListener('change', function() {
+          saveStudentAttendance(this.dataset.student);
+          updateStatistics();
+        });
+      });
+    }
+
+    // Salva a frequência de um aluno específico
+    function saveStudentAttendance(studentId) {
+      const row = document.querySelector(`input[data-student="${studentId}"]`).closest('tr');
+      const totalClasses = parseInt(document.getElementById('totalClasses').value) || 0;
+      const attendedClasses = parseInt(row.querySelector('.attended').value) || 0;
+      
+      const attendanceData = {
+        totalClasses: totalClasses,
+        attendedClasses: Math.min(attendedClasses, totalClasses)
+      };
+
+      const result = dataManager.setStudentAttendance(studentId, SUBJECT_ID, attendanceData);
+      
+      // Atualiza a linha da tabela
+      row.querySelector('.percentage').textContent = result.percentage + '%';
+      row.querySelector('.status').innerHTML = getStatusHTML(result.status);
+    }
+
+    // Marca presença de um aluno
+    function markPresent(studentId) {
+      const input = document.querySelector(`input[data-student="${studentId}"]`);
+      const currentValue = parseInt(input.value) || 0;
+      const totalClasses = parseInt(document.getElementById('totalClasses').value) || 0;
+      
+      if (currentValue < totalClasses) {
+        input.value = currentValue + 1;
+        saveStudentAttendance(studentId);
+        updateStatistics();
+      }
+    }
+
+    // Marca falta de um aluno
+    function markAbsent(studentId) {
+      const input = document.querySelector(`input[data-student="${studentId}"]`);
+      const currentValue = parseInt(input.value) || 0;
+      
+      if (currentValue > 0) {
+        input.value = currentValue - 1;
+        saveStudentAttendance(studentId);
+        updateStatistics();
+      }
+    }
+
+    // Retorna HTML formatado para o status
+    function getStatusHTML(status) {
+      let indicator = '';
+      let className = '';
+      
+      if (status === 'Aprovado') {
+        indicator = '<span class="status-indicator status-aprovado"></span>';
+        className = 'status-aprovado';
+      } else if (status === 'Atenção') {
+        indicator = '<span class="status-indicator status-recuperacao"></span>';
+        className = 'status-atencao';
+      } else if (status === 'Reprovado por falta') {
+        indicator = '<span class="status-indicator status-reprovado"></span>';
+        className = 'status-reprovado';
+      }
+      
+      return `<span class="${className}">${indicator}${status}</span>`;
+    }
+
+    // Atualiza as estatísticas
+    function updateStatistics() {
+      const students = dataManager.getStudents();
+      const totalClasses = parseInt(document.getElementById('totalClasses').value) || 0;
+      
+      let totalPercentage = 0;
+      let approved = 0;
+      let warning = 0;
+      let failed = 0;
+      
+      students.forEach(student => {
+        const attendance = dataManager.getStudentAttendance(student.id, SUBJECT_ID);
+        totalPercentage += attendance.percentage;
+        
+        if (attendance.status === 'Aprovado') approved++;
+        else if (attendance.status === 'Atenção') warning++;
+        else if (attendance.status === 'Reprovado por falta') failed++;
+      });
+      
+      const averagePercentage = students.length > 0 ? (totalPercentage / students.length).toFixed(1) : 0;
+      
+      document.getElementById('totalStudents').textContent = students.length;
+      document.getElementById('totalClassesCount').textContent = totalClasses;
+      document.getElementById('classAttendanceAverage').textContent = averagePercentage + '%';
+      document.getElementById('approvedAttendance').textContent = approved;
+      document.getElementById('warningAttendance').textContent = warning;
+      document.getElementById('failedAttendance').textContent = failed;
+    }
+
+    // Carrega o histórico de aulas
+    function loadClassHistory() {
+      const historyDiv = document.getElementById('classHistory');
+      
+      if (classHistory.length === 0) {
+        historyDiv.innerHTML = '<p>Nenhuma aula registrada ainda.</p>';
+        return;
+      }
+      
+      let html = '';
+      classHistory.forEach((classItem, index) => {
+        html += `
+          <div style="border-bottom: 1px solid var(--border-color); padding: 10px 0;">
+            <strong>Aula ${index + 1}</strong> - ${classItem.date}<br>
+            <small>${classItem.description}</small>
+            <button onclick="removeClass(${index})" style="float: right; background: none; border: none; color: var(--button-danger); cursor: pointer;">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        `;
+      });
+      
+      historyDiv.innerHTML = html;
+    }
+
+    // Remove uma aula do histórico
+    function removeClass(index) {
+      if (confirm('Tem certeza que deseja remover esta aula?')) {
+        classHistory.splice(index, 1);
+        localStorage.setItem(`classHistory_${SUBJECT_ID}`, JSON.stringify(classHistory));
+        
+        // Atualiza o total de aulas
+        document.getElementById('totalClasses').value = classHistory.length;
+        
+        loadClassHistory();
+        loadAttendanceTable();
+        updateStatistics();
+      }
+    }
+
+    // Event Listeners
+    document.getElementById('totalClasses').addEventListener('change', function() {
+      loadAttendanceTable();
+      updateStatistics();
+    });
+
+    document.getElementById('saveBtn').addEventListener('click', function() {
+      const students = dataManager.getStudents();
+      students.forEach(student => {
+        saveStudentAttendance(student.id);
+      });
+      alert('Frequência salva com sucesso!');
+    });
+
+    document.getElementById('loadBtn').addEventListener('click', function() {
+      loadAttendanceTable();
+      updateStatistics();
+      alert('Dados carregados com sucesso!');
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', function() {
+      if (confirm('Tem certeza que deseja limpar todos os dados de frequência? Isso não pode ser desfeito.')) {
+        const students = dataManager.getStudents();
+        students.forEach(student => {
+          dataManager.setStudentAttendance(student.id, SUBJECT_ID, {
+            totalClasses: 0,
+            attendedClasses: 0
+          });
+        });
+        
+        classHistory = [];
+        localStorage.setItem(`classHistory_${SUBJECT_ID}`, JSON.stringify(classHistory));
+        document.getElementById('totalClasses').value = 0;
+        
+        loadAttendanceTable();
+        loadClassHistory();
+        updateStatistics();
+        alert('Todos os dados foram limpos!');
+      }
+    });
+
+    document.getElementById('calcularBtn').addEventListener('click', function() {
+      const students = dataManager.getStudents();
+      students.forEach(student => {
+        saveStudentAttendance(student.id);
+      });
+      updateStatistics();
+      alert('Percentuais calculados com sucesso!');
+    });
+
+    document.getElementById('addClassBtn').addEventListener('click', function() {
+      const date = document.getElementById('classDate').value;
+      const description = document.getElementById('classDescription').value;
+      
+      if (!date || !description) {
+        alert('Por favor, preencha a data e descrição da aula.');
+        return;
+      }
+      
+      classHistory.push({
+        date: date,
+        description: description,
+        timestamp: new Date().toISOString()
+      });
+      
+      localStorage.setItem(`classHistory_${SUBJECT_ID}`, JSON.stringify(classHistory));
+      document.getElementById('totalClasses').value = classHistory.length;
+      document.getElementById('classDescription').value = '';
+      
+      loadClassHistory();
+      loadAttendanceTable();
+      updateStatistics();
+      
+      alert('Aula adicionada com sucesso!');
+    });
+
+    function logout() {
+      localStorage.removeItem("logado");
+      window.location.href = "login.html";
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.querySelector('.sidebar-overlay');
+      
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+  </script>
+
+</body>
+</html>
+

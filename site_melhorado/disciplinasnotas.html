@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <script>
+  if (localStorage.getItem("logado") !== "true") {
+    window.location.href = "login.html";
+  }
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>XBIUDERSMDD</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <h2>Menu Principal</h2>
+    <a href="listadeusuarios.html"><i class="fas fa-user-graduate"></i> Alunos</a>
+    <a href="disciplinasnotas.html"><i class="fas fa-star"></i> Notas</a>
+    <a href="disciplinasfrequencias.html"><i class="fas fa-clipboard-list"></i> Frequência</a>
+    <a href="configprof.html" id="configLink"><i class="fas fa-cogs"></i> Configurações</a>
+    <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</a>
+  </div>
+
+  <div class="main">
+    <div class="header">
+      <h1>
+        <i class="fas fa-star" style="margin-right: 15px; color: var(--button-primary);"></i>
+        Painel de Disciplinas
+      </h1>
+      <div class="welcome">
+        <i class="fas fa-user-circle" style="font-size: 2rem; margin-right: 10px;"></i>
+        <span></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="color: var(--text-primary); margin-bottom: 15px;">
+        <i class="fas fa-graduation-cap" style="margin-right: 10px; color: var(--button-primary);"></i>
+        Selecione uma Disciplina para Gerenciar as Notas
+      </h2>
+      <p style="font-size: 1.1rem; line-height: 1.6; color: var(--text-secondary);">
+        Clique em uma das disciplinas abaixo para acessar o sistema de gerenciamento de notas dos alunos.
+      </p>
+    </div>
+
+    <main class="grid">
+
+      <a href="notasmontagem.html" class="box">
+        <img src="https://i.postimg.cc/wj4n7tj9/Imagem-do-Whats-App-de-2025-06-13-s-23-51-51-5debe04a.jpg" alt="Montagem e Manutenção 1">
+        <div class="box-title">
+          <i class="fas fa-tools" style="margin-right: 8px; color: var(--button-primary);"></i>
+          Montagem e Manutenção I
+        </div>
+      </a>
+
+      <a href="notasfundamentos.html" class="box">
+        <img src="https://i.postimg.cc/q7CDqjFG/Imagem-do-Whats-App-de-2025-06-13-s-23-28-58-6c84a97c.jpg" alt="Fundamentos de Informática">
+        <div class="box-title">
+          <i class="fas fa-laptop-code" style="margin-right: 8px; color: var(--button-primary);"></i>
+          Fundamentos de Informática
+        </div>
+      </a>
+
+      <a href="notasintroduçãosistemas.html" class="box">
+        <img src="download.jpg" alt="Introdução a Sistemas Operacionais">
+        <div class="box-title">
+          <i class="fas fa-desktop" style="margin-right: 8px; color: var(--button-primary);"></i>
+          Introdução a Sistemas Operacionais
+        </div>
+      </a>
+
+      <a href="notaslogicas.html" class="box">
+        <img src="images.jpg" alt="Lógica de Programação">
+        <div class="box-title">
+          <i class="fas fa-code" style="margin-right: 8px; color: var(--button-primary);"></i>
+          Lógica de Programação
+        </div>
+      </a>
+
+      <a href="notasmontagem2.html" class="box">
+        <img src="https://i.postimg.cc/wj4n7tj9/Imagem-do-Whats-App-de-2025-06-13-s-23-51-51-5debe04a.jpg" alt="Montagem e Manutenção 2">
+        <div class="box-title">
+          <i class="fas fa-tools" style="margin-right: 8px; color: var(--button-primary);"></i>
+          Montagem e Manutenção II
+        </div>
+      </a>
+
+      <a href="notassistemas.html" class="box">
+        <img src="Sistema-operacional-capa.webp" alt="Sistemas Operacionais">
+        <div class="box-title">
+          <i class="fas fa-server" style="margin-right: 8px; color: var(--button-primary);"></i>
+          Sistemas Operacionais
+        </div>
+      </a>
+
+    </main>
+  </div>
+
+  <footer class="footer">
+    <span>© 2025 - Todos os direitos reservados</span>
+    <span>XBIUDERS MDD DO DEV</span>
+  </footer>
+
+  <script>
+    function logout() {
+      localStorage.removeItem("logado");
+      window.location.href = "login.html";
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.querySelector('.sidebar-overlay');
+      
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+  </script>
+
+</body>
+</html>
+
