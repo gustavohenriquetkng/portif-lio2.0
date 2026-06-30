@@ -4,13 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portfólio profissional de Gustavo Henrique, desenvolvedor Front-end e Full Stack em formação.">
+    <meta name="description"
+        content="Portfólio profissional de Gustavo Henrique, desenvolvedor Front-end e Full Stack em formação com projetos em HTML, CSS, JavaScript, PHP e MySQL.">
+    <meta name="keywords" content="desenvolvedor front-end, desenvolvedor full stack, HTML, CSS, JavaScript, PHP, MySQL, Teófilo Otoni">
+    <meta property="og:title" content="Gustavo Henrique | Desenvolvedor Front-end">
+    <meta property="og:description" content="Portfólio profissional com projetos em HTML, CSS, JavaScript, PHP e MySQL.">
+    <meta property="og:image" content="./img/TVN_Graffiti_re.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" type="image/png" href="./fav.icons/TVN_Graffiti_re.png">
     <!-- Fontes consolidadas: Montserrat e Poppins (removida a redundância) -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script src="https://kit.fontawesome.com/aa1c17a9f7.js" crossorigin="anonymous"></script>
@@ -18,10 +23,13 @@
 </head>
 
 <body>
+    <div class="scroll-progress" aria-hidden="true"></div>
+    <button class="back-to-top" aria-label="Voltar ao topo">↑</button>
+
     <header class="header">
         <a href="#hero" class="logotipo" aria-label="Voltar para o início">
             <img src="./img/TVN_Graffiti_re.png" class="logotipo" alt="Gustavo Henrique developer logo">
-        
+
         </a>
         <nav class="nav" aria-label="Navegação Principal">
             <button class="menu-toggle" aria-controls="nav-links" aria-expanded="false" aria-label="Abrir menu">
@@ -32,7 +40,9 @@
                 <li><a href="#sobre-mim">Sobre Mim</a></li>
                 <li><a href="#habilidades">Habilidades</a></li>
                 <li><a href="#projetos">Projetos</a></li>
-                
+                <li><a href="#servicos">Serviços</a></li>
+                <li><a href="#contato">Contato</a></li>
+
             </ul>
         </nav>
     </header>
@@ -40,27 +50,56 @@
     <main>
         <!-- 1. Hero de apresentação -->
         <section id="hero" class="hero-section">
-            <div class="hero-content">
-                <img src="./img/Gemini_Generated_Image_rwaycwrwaycwrway (1).png" alt="Foto de perfil de Gustavo Henrique, desenvolvedor web." class="profile-img">
+            <div class="hero-content reveal">
+                <img src="./img/Gemini_Generated_Image_rwaycwrwaycwrway (1).png"
+                    alt="Foto de perfil de Gustavo Henrique, desenvolvedor web." class="profile-img">
+                <div class="hero-badges">
+                    <span class="hero-badge">Front-end</span>
+                    <span class="hero-badge">UI/UX</span>
+                    <span class="hero-badge">JavaScript</span>
+                    <span class="hero-badge">PHP</span>
+                    <span class="hero-badge">MySQL</span>
+                </div>
                 <h1 class="hero-title">Olá, eu sou <b>Gustavo Henrique.</b></h1>
-                <p class="hero-subtitle">Tenho 23 Anos de idade</p>
-                <p class="hero-description">Bem-vindo ao meu portfólio! Sou um desenvolvedor Front-end focado em criar interfaces modernas e acessíveis.</p>
-            
+                    <a href="#projetos" class="btn btn-primary">Ver projetos</a>
+                    <a href="#contato" class="btn btn-secondary">Falar comigo</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats-section reveal">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>10+</h3>
+                    <p>Projetos desenvolvidos</p>
+                </div>
+                <div class="stat-card">
+                    <h3>6+</h3>
+                    <p>Tecnologias em prática</p>
+                </div>
+                <div class="stat-card">
+                    <h3>100%</h3>
+                    <p>Comprometimento</p>
+                </div>
             </div>
         </section>
 
         <!-- 2. Sobre mim -->
-        <section id="sobre-mim" class="about-section">
+        <section id="sobre-mim" class="about-section reveal">
             <h2 class="section-title">SOBRE <span class="highlight">MIM</span></h2>
-            <div class="about-content">
-                <p>Tenho me dedicado intensamente ao desenvolvimento das minhas habilidades em Front-end, com foco em HTML, CSS e JavaScript. Meu objetivo é construir uma base sólida e dominar as tecnologias essenciais para criação de interfaces modernas, responsivas e eficientes.</p>
-                <p>Esse processo faz parte da minha jornada para me tornar um desenvolvedor Full Stack, capaz de atuar tanto no lado do cliente quanto no servidor, criando soluções completas, elegantes e de alto desempenho.</p>
-                <p>Cada novo estudo, projeto e desafio me aproxima ainda mais desse propósito, fortalecendo minha capacidade técnica e ampliando meu domínio sobre o ecossistema de desenvolvimento web.</p>
+            <div class="trajectory-content">
+                <p>Iniciei minha trajetória no desenvolvimento Front-End, construindo interfaces modernas, intuitivas e focadas na melhor experiência para o usuário. Atualmente, sigo evoluindo constantemente em direção ao Back-End, ampliando meus conhecimentos para desenvolver soluções completas e escaláveis.</p>
+
+                <p>Como parte dessa jornada, estou projetando um dos meus maiores desafios até o momento: uma plataforma de agendamento para barbearias, pensada para otimizar a gestão de horários, clientes e serviços. O objetivo é unir tecnologia, praticidade e design para entregar uma experiência eficiente tanto para os profissionais quanto para os usuários finais.</p>
+
+                <p>Cada etapa desse projeto representa não apenas um avanço técnico, mas também a construção do meu legado como desenvolvedor, reforçando meu compromisso com aprendizado contínuo, inovação e excelência na criação de soluções digitais.</p>
             </div>
+            <div class="about-content">
+                
         </section>
 
-        <!-- 3. Habilidades -->
-        <section id="habilidades" class="skills-section">
+        <!-- 4. Habilidades -->
+        <section id="habilidades" class="skills-section reveal">
             <h2 class="section-title">HABILI<span class="highlight">DADES</span></h2>
             <p class="section-subtitle">Minhas principais habilidades em desenvolvimento Front-end incluem:</p>
             <div class="skills-container">
@@ -92,119 +131,286 @@
                         <li>Interatividade e Eventos</li>
                     </ul>
                 </article>
+                <article class="skill-card">
+                    <h3 class="skill-title">PHP</h3>
+                    <p class="skill-specialty">Especialidade: Lógica e backend</p>
+                    <ul class="skill-list">
+                        <li>Processamento de dados</li>
+                        <li>Autenticação e formulários</li>
+                        <li>Integração com sistemas web</li>
+                    </ul>
+                </article>
+                <article class="skill-card">
+                    <h3 class="skill-title">MySQL</h3>
+                    <p class="skill-specialty">Especialidade: Banco de dados</p>
+                    <ul class="skill-list">
+                        <li>Cadastro e organização</li>
+                        <li>Consultas e relacionamento</li>
+                        <li>Gestão de dados para sistemas</li>
+                    </ul>
+                </article>
             </div>
         </section>
 
-        <!-- 4. Projetos -->
-        <section id="projetos" class="projects-section">
-            <h2 class="section-title">PROJETOS <span class="highlight">DESENVOLVIDOS</span></h2>
-            <p class="section-subtitle">Aqui estão alguns dos projetos que desenvolvi recentemente:</p>
+        <section class="tech-section reveal">
+            <h2 class="section-title">TECNOLOGIAS E <span class="highlight">FERRAMENTAS</span></h2>
+            <div class="tech-grid">
+                <div class="tech-pill"><i class="fab fa-html5"></i>HTML5</div>
+                <div class="tech-pill"><i class="fab fa-css3-alt"></i>CSS3</div>
+                <div class="tech-pill"><i class="fab fa-js"></i>JavaScript</div>
+                <div class="tech-pill"><i class="fab fa-php"></i>PHP</div>
+                <div class="tech-pill"><i class="fas fa-database"></i>MySQL</div>
+                <div class="tech-pill"><i class="fab fa-git-alt"></i>Git</div>
+                <div class="tech-pill"><i class="fab fa-github"></i>GitHub</div>
+                <div class="tech-pill"><i class="fas fa-mobile-alt"></i>Responsividade</div>
+                <div class="tech-pill"><i class="fas fa-universal-access"></i>Acessibilidade</div>
+            </div>
+        </section>
+
+        <!-- 5. Projetos -->
+        <section id="projetos" class="projects-section reveal">
+            <h2 class="section-title">PROJETOS <span class="highlight">EM DESTAQUE</span></h2>
+            <p class="section-subtitle">Alguns projetos que refletem minha evolução técnica e meu foco em soluções práticas.</p>
             <div class="projects-grid">
                 <!-- Uso de article para cada projeto para melhor semântica -->
-                <article class="project-card">
-                    <a href="./spotfyp2/index.html" aria-label="Ver projeto Spotfy Replica">
-                        <img src="./imagep/image.png" alt="Miniatura do projeto Spotfy Replica" class="project-image" loading="lazy">
-                        <h3 class="project-title">SPOTFY</h3>
-                        <p class="project-description">Uma réplica da página inicial do Spotfy.</p>
+                <article class="project-card featured-project">
+                    <a href="./site_melhorado/login.html" aria-label="Abrir Diário Eletrônico">
+                        <div class="project-media">
+                            <img src="./imagep/image copy 4.png" alt="Miniatura do projeto Diário Eletrônico"
+                                class="project-image" loading="lazy">
+                        </div>
+                        <div class="project-body">
+                            <h3 class="project-title">DIÁRIO ELETRÔNICO</h3>
+                            <p class="project-description">Sistema escolar com organização de notas e frequências para alunos e professores.</p>
+                            <div class="project-tags">
+                                <span>PHP</span>
+                                <span>MySQL</span>
+                                <span>UI</span>
+                            </div>
+                        </div>
                     </a>
                 </article>
 
-                <article class="project-card">
+                <article class="project-card featured-project">
+                    <a href="./QuadrodosSonhosp8/login.html" aria-label="Abrir Quadro dos Sonhos">
+                        <div class="project-media">
+                            <img src="./imagep/quadro.png" alt="Quadro dos Sonhos" class="project-image" loading="lazy">
+                        </div>
+                        <div class="project-body">
+                            <h3 class="project-title">QUADRO DOS SONHOS</h3>
+                            <p class="project-description">Projeto com login integrado para registrar metas, conquistas e objetivos.</p>
+                            <div class="project-tags">
+                                <span>HTML</span>
+                                <span>CSS</span>
+                                <span>JS</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                <article class="project-card featured-project">
+                    <a href="./Deliveryp6/index.html" aria-label="Abrir Delivery">
+                        <div class="project-media">
+                            <img src="./imagep/delivery.png" alt="Imagem delivery" class="project-image" loading="lazy">
+                        </div>
+                        <div class="project-body">
+                            <h3 class="project-title">DELIVERY</h3>
+                            <p class="project-description">Interface voltada para vendas de hambúrgueres com foco em experiência de navegação.</p>
+                            <div class="project-tags">
+                                <span>HTML</span>
+                                <span>CSS</span>
+                                <span>JS</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                 <article class="project-card featured-project">
+                    <a href="./spotfyp2/index.html" aria-label="Ver projeto Spotify Replica">
+                        <div class="project-media">
+                            <img src="./imagep/image.png" alt="Miniatura do projeto Spotify Replica" class="project-image"
+                                loading="lazy">
+                        </div>
+                        <div class="project-body">
+                            <h3 class="project-title">SPOTIFY</h3>
+                            <p class="project-description">Uma réplica da página inicial do Spotify para estudo de layout e interface.</p>
+                            <div class="project-tags">
+                                <span>HTML</span>
+                                <span>CSS</span>
+                                <span>JS</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                 <article class="project-card featured-project">
                     <a href="./TelaLoginp5/index.html" aria-label="Ver projeto Tela de Login">
-                        <img src="./imagep/image copy 3.png" alt="Miniatura do projeto Tela de Login" class="project-image" loading="lazy">
-                        <h3 class="project-title">TELA DE LOGIN</h3>
-                        <p class="project-description">Uma tela responsiva que tem 3 usuários gerando login a uma página.</p>
+                        <div class="project-media">
+                            <img src="./imagep/image copy 3.png" alt="Miniatura do projeto Tela de Login"
+                                class="project-image" loading="lazy">
+                        </div>
+                        <div class="project-body">
+                            <h3 class="project-title">TELA DE LOGIN</h3>
+                            <p class="project-description">Uma tela responsiva que tem 3 usuários gerando login a uma
+                                página.</p>
+                                <div class="project-tags">
+                                <span>HTML</span>
+                                <span>CSS</span>
+                                <span>JS</span>
+                            </div>
+                        </div>
+                          
                     </a>
                 </article>
 
-                <article class="project-card">
+                 <article class="project-card featured-project">
                     <a href="./Estrutura/index.html" aria-label="Ver projeto Apple Store Replica">
-                        <img src="./imagep/image copy 2.png" alt="Miniatura do projeto Apple Store Replica" class="project-image" loading="lazy">
-                        <h3 class="project-title">APPLE-STORE</h3>
-                        <p class="project-description">Página desenvolvida para vender produtos Apple.</p>
+                        <div class="project-media">
+                            <img src="./imagep/image copy 2.png" alt="Miniatura do projeto Apple Store Replica"
+                                class="project-image" loading="lazy">
+                        </div>
+                        <div class="project-body">
+                            <h3 class="project-title">APPLE-STORE</h3>
+                            <p class="project-description">Página desenvolvida para vender produtos Apple.</p>
+                            <div class="project-tags">
+                                <span>HTML</span>
+                                <span>CSS</span>
+                                <span>JS</span>
+                            </div>
+                        </div>
                     </a>
                 </article>
 
-                <article class="project-card">
-                    <a href="./site_melhorado/login.html" aria-label="Ver projeto Diário Eletrônico">
-                        <img src="./imagep/image copy 4.png" alt="Miniatura do projeto Diário Eletrônico" class="project-image" loading="lazy">
-                        <h3 class="project-title">DIÁRIO ELETRÔNICO</h3>
-                        <p class="project-description">Um diário desenvolvido para lançar notas e frequências de alunos em determinados cursos.</p>
-                    </a>
-                </article>
-
-                <article class="project-card">
+                <article class="project-card featured-project">
                     <a href="./cafeteriap3/index.html" aria-label="Ver projeto Cafeteria">
-                        <img src="./imagep/image copy.png" alt="Miniatura do projeto Cafeteria" class="project-image" loading="lazy">
-                        <h3 class="project-title">CAFETERIA</h3>
-                        <p class="project-description">Uma página para a venda de cafés, capuccinos e os demais para deixar sua noite de códigos com mais energia.</p>
+                        <div class="project-media">
+                            <img src="./imagep/image copy.png" alt="Miniatura do projeto Cafeteria" class="project-image"
+                                loading="lazy">
+                        </div>
+                        <div class="project-body">
+                            <h3 class="project-title">CAFETERIA</h3>
+                            <p class="project-description">Uma página para a venda de cafés, capuccinos e os demais para
+                                deixar sua noite de códigos com mais energia.</p>
+                            <div class="project-tags">
+                                <span>HTML</span>
+                                <span>CSS</span>
+                                <span>JS</span>
+                            </div>
+                        </div>
                     </a>
                 </article>
 
-                <article class="project-card">
+                <article class="project-card featured-project">
                     <a href="./mercadolivrep7/index.html" aria-label="Ver projeto Mercado Livre Replica">
-                        <img src="./imagep/image copy 5.png" alt="Miniatura do projeto Mercado Livre Replica" class="project-image" loading="lazy">
-                        <h3 class="project-title">MERCADO LIVRE</h3>
-                        <p class="project-description">Réplica do Mercado Livre com um Array que armazena os produtos para exposição e pesquisa.</p>
+                        <div class="project-media">
+                            <img src="./imagep/image copy 5.png" alt="Miniatura do projeto Mercado Livre Replica"
+                                class="project-image" loading="lazy">
+                        </div>
+                        <div class="project-body">
+                            <h3 class="project-title">MERCADO LIVRE</h3>
+                            <p class="project-description">Réplica do Mercado Livre com um Array que armazena os produtos
+                                para exposição e pesquisa.</p>
+                            <div class="project-tags">
+                                <span>HTML</span>
+                                <span>CSS</span>
+                                <span>JS</span>
+                            </div>
+                        </div>
                     </a>
                 </article>
 
-                <article class="project-card">
-                    <a href="./Deliveryp6/index.html" aria-label="Ver site de Delivery">
-                        <img src="./imagep/delivery.png" alt="Imagem delivery" class="project-image" loading="lazy">
-                        <h3 class="project-title">DELIVERY</h3>
-                        <p class="project-description">Uma Página para Vendas de Hamburguer e comidas variadas para alegrar seu dia e noite</p>
-                    </a>
-                </article>
-
-                <article class="project-card">
-                    <a href="./QuadrodosSonhosp8/login.html" aria-label="Ver projeto Quadro dos Sonhos">
-                        <img src="./imagep/quadro.png" alt="Quadro" class="project-image" loading="lazy">
-                        <h3 class="project-title">QUADRO DOS SONHOS</h3>
-                        <p class="project-description">Um quandro com login integrado para você adicionar seus sonhos, metas ou conquistas.</p>
-                    </a>
-                </article>
-
-                <article class="project-card">
+                <article class="project-card featured-project">
                     <a href="./instagramp9/index.html" aria-label="Ver projeto Instagram Replica">
-                        <img src="./imagep/instagram.png" alt="instagram" class="project-image" loading="lazy">
-                        <h3 class="project-title">RÉPLICA INSTAGRAM </h3>
-                        <p class="project-description">Uma replica da tela de login do Instagram.</p>
+                        <div class="project-media">
+                            <img src="./imagep/instagram.png" alt="instagram" class="project-image" loading="lazy">
+                        </div>
+                        <div class="project-body">
+                            <h3 class="project-title">RÉPLICA INSTAGRAM </h3>
+                            <p class="project-description">Uma replica da tela de login do Instagram.</p>
+                            <div class="project-tags">
+                                <span>HTML</span>
+                                <span>CSS</span>
+                                <span>JS</span>
+                            </div>
+                        </div>
                     </a>
                 </article>
 
-                <article class="project-card">
+                <article class="project-card featured-project">
                     <a href="./RefriTavinp10/index.html" aria-label="Ver projeto Refri Tavin">
-                        <img src="./imagep/refri.png" alt="Refri" class="project-image" loading="lazy">
-                        <h3 class="project-title">REFRI DO TAVIN</h3>
-                        <p class="project-description">Loja do refri mais saboroso do mundo!</p>
+                        <div class="project-media">
+                            <img src="./imagep/refri.png" alt="Refri" class="project-image" loading="lazy">
+                        </div>
+                        <div class="project-body">
+                            <h3 class="project-title">REFRI DO TAVIN</h3>
+                            <p class="project-description">Loja do refri mais saboroso do mundo!</p>
+                            <div class="project-tags">
+                                <span>HTML</span>
+                                <span>CSS</span>
+                                <span>JS</span>
+                            </div>
+                        </div>
                     </a>
                 </article>
 
-                
 
 
+
+            </div>
+        </section>
+
+        <section id="servicos" class="services-section reveal">
+            <h2 class="section-title">COMO POSSO <span class="highlight">AJUDAR</span></h2>
+            <div class="services-grid">
+                <article class="service-card">
+                    <h3>Landing Pages</h3>
+                    <p>Interfaces modernas e persuasivas para apresentar produtos, serviços ou marcas.</p>
+                </article>
+                <article class="service-card">
+                    <h3>Sistemas PHP + MySQL</h3>
+                    <p>Desenvolvimento de soluções com organização de dados, cadastros e gestão prática.</p>
+                </article>
+                <article class="service-card">
+                    <h3>Interfaces Responsivas</h3>
+                    <p>Sites adaptados para desktop, tablet e celular com foco em experiência do usuário.</p>
+                </article>
+                <article class="service-card">
+                    <h3>Melhorias e Manutenção</h3>
+                    <p>Atualizações, ajustes visuais e organização de projetos já existentes.</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="contato" class="contact-section reveal">
+            <h2 class="section-title">VAMOS <span class="highlight">CONVERSAR</span></h2>
+            <p class="section-subtitle">Estou aberto a oportunidades, freelas e projetos que tragam impacto real.</p>
+            <div class="contact-box">
+                <p>Se você deseja criar uma presença digital forte, desenvolver uma interface moderna ou construir uma solução prática, posso ajudar.</p>
+                <a href="https://wa.me/5533999445869" class="btn btn-primary">Mande uma mensagem</a>
             </div>
         </section>
     </main>
 
-    <footer class="footer">
-        <section>
-            <div class="social-links">
-                <a href="www.linkedin.com/in/gustavohenriquetavin" target="_blank" aria-label="Perfil do LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                <a href="https://github.com/gustavohenriquetkng" target="_blank" aria-label="Perfil do GitHub"><i class="fab fa-github"></i></a>
-                <a href="https://www.instagram.com/gustavo_henriquetkng/" target="_blank" aria-label="Perfil do Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://wa.me/5533999445869" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-
+    <footer class="footer reveal">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <img src="./img/TVN_Graffiti_re.png" alt="Logo Gustavo Henrique" class="footer-logo">
+                <p>Desenvolvendo experiências web modernas, com usabilidade, performance e presença visual forte.</p>
             </div>
-        </section>
-        <section>
-            <br>
-            <p>📍 Salmos 37 📍</p>
-            <a></a>
-            </section>
-        
-        <p>&copy; 2025 Gustavo Henrique. Todos os direitos reservados.</p>
+            <div class="footer-social-panel">
+                <h3>Conecte-se</h3>
+                <div class="social-links footer-social-links">
+                    <a href="https://www.linkedin.com/in/gustavohenriquer7" target="_blank" aria-label="Perfil do LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://github.com/gustavohenriquetkng" target="_blank" aria-label="Perfil do GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://wa.me/5533999445869" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Gustavo Henrique. Todos os direitos reservados.</p>
+            <p>Consagre ao Senhor tudo o que você faz,
+             e os seus planos serão bem-sucedidos.</p>
+        </div>
     </footer>
 
     <script src="script.js"></script>

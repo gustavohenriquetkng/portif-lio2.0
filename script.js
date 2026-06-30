@@ -1,7 +1,49 @@
-// Lógica para o menu responsivo (Hamburger Menu)
 document.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.querySelector('.menu-toggle');
     const navLinks = document.querySelector('.nav-links');
+    const header = document.querySelector('.header');
+    const scrollProgress = document.querySelector('.scroll-progress');
+    const backToTop = document.querySelector('.back-to-top');
+    const revealElements = document.querySelectorAll('.reveal');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    revealElements.forEach((element) => observer.observe(element));
+
+    const handleScroll = () => {
+        if (header) {
+            header.classList.toggle('scrolled', window.scrollY > 20);
+        }
+    };
+
+    const handleProgress = () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+
+        if (scrollProgress) {
+            scrollProgress.style.width = `${Math.min(progress, 100)}%`;
+        }
+
+        if (backToTop) {
+            backToTop.classList.toggle('visible', scrollTop > 500);
+        }
+    };
+
+    window.addEventListener('scroll', () => {
+        handleScroll();
+        handleProgress();
+    });
+
+    handleScroll();
+    handleProgress();
 
     if (menuToggle && navLinks) {
         menuToggle.addEventListener('click', () => {
@@ -10,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
             navLinks.classList.toggle('active');
         });
 
-        // Fechar o menu ao clicar em um link (apenas no mobile)
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 if (window.innerWidth < 768) {
@@ -20,28 +61,26 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-});
 
-// Smooth Scroll (Fallback para navegadores que não suportam scroll-behavior: smooth no CSS)
-// No CSS, já definimos scroll-behavior: smooth; para a maioria dos navegadores modernos.
-// Mantemos este JS apenas como um fallback, mas o CSS é o método preferido.
-document.querySelectorAll('a[href^="#"]').forEach(link => {
-    link.addEventListener("click", function(e) {
-        const href = this.getAttribute("href");
-        if (href === "#" || href === "") return; // Ignora links vazios
+    if (backToTop) {
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
 
-        // Verifica se o scroll-behavior: smooth é suportado. Se não for, usa o JS.
-        // A verificação é complexa, então vamos confiar no CSS e manter o JS simples.
-        // O CSS é mais performático.
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (href === '#' || href === '') return;
 
-        // Se o CSS falhar, o JS abaixo garante o smooth scroll.
-        e.preventDefault();
-        const target = document.querySelector(href);
-        if (target) {
-            target.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
-        }
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
     });
 });

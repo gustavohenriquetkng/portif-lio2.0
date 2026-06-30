@@ -91,7 +91,38 @@ function addToCart(product) {
 
   saveCart(cart);
 
-  alert(`"${product.title}" foi adicionado ao carrinho! 🛒`);
+  showToast(`"${product.title}" foi adicionado ao carrinho! 🛒`);
+}
+
+function getToastContainer() {
+  let container = document.getElementById("toast-container");
+  if (!container) {
+    container = document.createElement("div");
+    container.id = "toast-container";
+    container.className = "toast-container";
+    document.body.appendChild(container);
+  }
+  return container;
+}
+
+function showToast(message, type = "success") {
+  const container = getToastContainer();
+  const toast = document.createElement("div");
+  toast.className = `toast-notification ${type}`;
+  toast.innerHTML = `<span class="toast-icon">✔️</span><span>${message}</span>`;
+
+  container.appendChild(toast);
+
+  window.requestAnimationFrame(() => {
+    toast.classList.add("visible");
+  });
+
+  setTimeout(() => {
+    toast.classList.remove("visible");
+    toast.addEventListener("transitionend", () => {
+      toast.remove();
+    }, { once: true });
+  }, 2800);
 }
 
 // =======================
